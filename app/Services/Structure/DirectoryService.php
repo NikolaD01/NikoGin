@@ -70,7 +70,8 @@ class DirectoryService
     {
         $directoryPath = match ($type) {
             'rest' => $controllerDir . '/API',
-            'menu', 'submenu' => $controllerDir . '/Dashboard',
+            'menu' => $controllerDir . '/Dashboard/Menu',
+            'submenu' => $controllerDir . '/Dashboard/SubMenu',
             default => throw new \InvalidArgumentException('Invalid controller type provided. Allowed types: rest, menu, submenu.')
         };
 
