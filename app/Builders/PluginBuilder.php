@@ -36,6 +36,8 @@ class PluginBuilder
             $directories['foundation'] . '/ProviderManager.php' => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
             $directories['foundation'] . '/ServiceProvider.php' => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),
             $directories['foundation'] . '/DashboardController.php' => $this->baseLogicGenerator->generateDashboardControllerLogic($pluginPrefix),
+            $directories['foundation'] . '/MenuController.php' =>  $this->baseLogicGenerator->generateMenuControllerLogic($pluginPrefix),
+            $directories['foundation'] . '/SubmenuController.php' => $this->baseLogicGenerator->generateSubmenuControllerLogic($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
             $directories['traits'] . '/IsSingleton.php' => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
             $directories['support'] . '/Container.php' => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
