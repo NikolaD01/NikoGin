@@ -15,17 +15,13 @@ class PluginCreatorService
 
         $pluginDir = __DIR__ . '/../../../' . strtolower($pluginName);
 
-        // Create the main plugin directory
         if (!mkdir($pluginDir, 0755, true) && !is_dir($pluginDir)) {
             throw new \RuntimeException('Failed to create plugin directory.');
         }
-        // Create subdirectories
-        $this->createStructure($pluginDir, $pluginPrefix, $pluginName);
-
-        // Prepare the composer.json content
         $composerJson = $this->baseLogicGenerator->generateComposerJson($pluginName, $pluginPrefix);
-        // Create the composer.json file
         file_put_contents($pluginDir . '/composer.json', json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        $this->createStructure($pluginDir, $pluginPrefix, $pluginName);
 
         return $pluginDir;
     }
@@ -34,13 +30,20 @@ class PluginCreatorService
     {
         $directories = $this->directoryService->createDirectories($pluginDir);
 
-        file_put_contents($pluginDir . "/".strtolower($pluginName ).".php", $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName));
-        file_put_contents($directories['app'] . '/Plugin.php', $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName));
-        file_put_contents($directories['foundation'] . '/ProviderManager.php', $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix));
-        file_put_contents($directories['foundation'] . '/ServiceProvider.php', $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix));
-        file_put_contents($directories['managers'] . '/ServiceProviderManager.php', $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix));
-        file_put_contents($directories['traits'] . '/IsSingleton.php', $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix));
-        file_put_contents($directories['support'] . '/Container.php', $this->baseLogicGenerator->generateContainerLogic($pluginPrefix));
-        file_put_contents($directories['support'] . '/Router.php', $this->baseLogicGenerator->generateRouterLogic($pluginPrefix));
+        $files = [
+            $pluginDir . "/" . strtolower($pluginName) . ".php" => $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName),
+            $directories['app'] . '/Plugin.php' => $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName),
+            $directories['foundation'] . '/ProviderManager.php' => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
+            $directories['foundation'] . '/ServiceProvider.php' => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),
+            $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
+            $directories['traits'] . '/IsSingleton.php' => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
+            $directories['support'] . '/Container.php' => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
+            $directories['support'] . '/Router.php' => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
+        ];
+
+        foreach ($files as $path => $content) {
+            file_put_contents($path, $content);
+        }
+
     }
 }
