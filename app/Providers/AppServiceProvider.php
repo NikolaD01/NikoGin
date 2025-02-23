@@ -3,8 +3,10 @@
 namespace NikoGin\Providers;
 
 use NikoGin\Builders\ControllerBuilder;
+use NikoGin\Builders\MigrationBuilder;
 use NikoGin\Builders\PluginBuilder;
 use NikoGin\Command\CreateControllerCommand;
+use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Services\Logic\BaseLogicGenerator;
@@ -17,9 +19,11 @@ class AppServiceProvider extends ServiceProvider
         DirectoryService::class,
         BaseLogicGenerator::class,
         ControllerLogicGenerator::class,
+        MigrationBuilder::class,
         ControllerBuilder::class => [DirectoryService::class, ControllerLogicGenerator::class],
         PluginBuilder::class => [BaseLogicGenerator::class, DirectoryService::class],
         CreatePluginCommand::class => [PluginBuilder::class],
         CreateControllerCommand::class => [ControllerBuilder::class],
+        CreateMigrationCommand::class => [MigrationBuilder::class],
     ];
 }
