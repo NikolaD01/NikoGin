@@ -2,7 +2,9 @@
 
 namespace NikoGin\Command;
 
+use NikoGin\Builders\ControllerBuilder;
 use NikoGin\Core\Support\Validator;
+use NikoGin\Services\Structure\DirectoryService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,15 +18,21 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 )]
 class CreateControllerCommand extends Command
 {
+    public function __construct(private ControllerBuilder $controllerBuilder)
+    {
+        parent::__construct();
+    }
     protected function configure(): void
     {
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the controller');
         $this->addArgument('type', InputArgument::REQUIRED, 'The type of the controller');
+        $this->addArgument('directory', InputArgument::OPTIONAL, 'The plugin directory (e.g., myplugin)');
     }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = $input->getArgument('name');
         $type = strtolower($input->getArgument('type'));
+        $directory = strtolower($input->getArgument('directory'));
 
         $helper = $this->getHelper('question');
 
@@ -42,8 +50,10 @@ class CreateControllerCommand extends Command
         }
 
 
+        $controllerDir = $this->controllerBuilder->create($name, $type, $directory);
+        $output->writeln(sprintf('<info>Creating Controller in:</info> %s', $controllerDir));
+        $output->writeln(sprintf('<info>Controller Name:</info> %s (%s)', $name, $type));
 
-        $output->writeln(sprintf('<info>Creating Controller:</info> %s (%s)', $name, $type));
 
         return Command::SUCCESS;
     }

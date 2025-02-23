@@ -1,11 +1,11 @@
 <?php
 
-namespace NikoGin\Services;
+namespace NikoGin\Builders;
 
 use NikoGin\Services\Logic\BaseLogicGenerator;
 use NikoGin\Services\Structure\DirectoryService;
 
-class PluginCreatorService
+class PluginBuilder
 {
     public function __construct(private readonly BaseLogicGenerator $baseLogicGenerator, private readonly DirectoryService $directoryService)
     {}
@@ -35,6 +35,7 @@ class PluginCreatorService
             $directories['app'] . '/Plugin.php' => $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName),
             $directories['foundation'] . '/ProviderManager.php' => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
             $directories['foundation'] . '/ServiceProvider.php' => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),
+            $directories['foundation'] . '/DashboardController.php' => $this->baseLogicGenerator->generateDashboardControllerLogic($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
             $directories['traits'] . '/IsSingleton.php' => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
             $directories['support'] . '/Container.php' => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),

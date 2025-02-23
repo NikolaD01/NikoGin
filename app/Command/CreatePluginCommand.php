@@ -2,7 +2,7 @@
 
 namespace NikoGin\Command;
 
-use NikoGin\Services\PluginCreatorService;
+use NikoGin\Builders\PluginBuilder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +17,7 @@ use Symfony\Component\Process\Process;
 )]
 class CreatePluginCommand extends Command
 {
-    public function __construct(private readonly PluginCreatorService $pluginCreator)
+    public function __construct(private readonly PluginBuilder $pluginBuilder)
     {
         parent::__construct();
     }
@@ -48,7 +48,7 @@ class CreatePluginCommand extends Command
         }
 
         try {
-            $pluginDir = $this->pluginCreator->create($pluginName, $pluginPrefix);
+            $pluginDir = $this->pluginBuilder->create($pluginName, $pluginPrefix);
             $output->writeln("<info>Plugin directory created at: {$pluginDir}</info>");
             $output->writeln("<info>composer.json created with prefix: {$pluginPrefix}</info>");
 
