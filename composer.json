@@ -1,0 +1,25 @@
+{
+    "name": "nikolad/nikogin",
+    "description": "NikoGin framework for non-standard WordPress Plugin",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nikola Devic",
+            "email": "devicnikola01@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/console": "^7.2",
+        "symfony/process": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "NikoGin\\": "app/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
