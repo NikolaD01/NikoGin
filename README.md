@@ -40,6 +40,38 @@ php nikogin create MyPlugin MyPluginPrefix
     - Other necessary components.
 - 📦 Automatically runs `composer install` to set up dependencies.
 
+### Create a Controller
+
+```sh
+php nikogin make:controller <Name> <Type> <Dir> 
+```
+
+Available Types:
+
+There are three options for the `<Type>` argument:
+
+    rest – Creates a REST API controller.
+    menu – Creates a Menu controller.
+    submenu – Creates a Submenu controller.
+
+### Examples
+#### 1. Example for Rest Controller directly from wp-content
+```sh
+php nikogin make:controller ExampleRestController rest example-plugin
+```
+#### 2. Example for Menu Controller from root of project
+```sh
+php nikogin make:controller ExampleMenuController menu wp-content/example-plugin
+```
+#### 3. Example for Submenu Controller 
+```sh
+php nikogin make:controller ExampleSubmenuController submenu example-plugin
+```
+### What This Command Does:
+- 📁 Creates a directory for Controller type if it's not created already.
+- 🏗️ Generates essential class logic
+
+
 ## 🛠️ Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.
 
