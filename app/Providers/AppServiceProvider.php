@@ -2,6 +2,7 @@
 
 namespace NikoGin\Providers;
 
+use NikoGin\Command\CreateControllerCommand;
 use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Services\Logic\BaseLogicGenerator;
@@ -15,5 +16,6 @@ class AppServiceProvider extends ServiceProvider
         BaseLogicGenerator::class,
         PluginCreatorService::class => [BaseLogicGenerator::class, DirectoryService::class],
         CreatePluginCommand::class => [PluginCreatorService::class],
+        CreateControllerCommand::class,
     ];
 }
