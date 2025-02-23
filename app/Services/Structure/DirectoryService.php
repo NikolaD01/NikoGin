@@ -65,4 +65,20 @@ class DirectoryService
 
         return $this->directories;
     }
+
+    public function createControllerDirectories(string $controllerDir, string $type): string
+    {
+        $directoryPath = match ($type) {
+            'rest' => $controllerDir . '/API',
+            'menu' => $controllerDir . '/Dashboard/Menu',
+            'submenu' => $controllerDir . '/Dashboard/SubMenu',
+            default => throw new \InvalidArgumentException('Invalid controller type provided. Allowed types: rest, menu, submenu.')
+        };
+
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
+
+        return $directoryPath;
+    }
 }

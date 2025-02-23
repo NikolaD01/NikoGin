@@ -38,9 +38,24 @@ class BaseLogicGenerator
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nuse {$pluginPrefix}\\Core\\Support\\Container;\n\nabstract class ServiceProvider\n{\n    protected array \$services = [];\n\n    public function register(): void\n    {\n        foreach (\$this->services as \$service => \$dependencies)\n        {\n            if (is_string(\$service) && is_array(\$dependencies))\n            {\n                Container::bind(\$service, function () use (\$service, \$dependencies)\n                {\n                    \$resolvedDependencies = array_map(fn(\$dep) => Container::get(\$dep), \$dependencies);\n                    return new \$service(...\$resolvedDependencies);\n                });\n            } elseif (is_string(\$service))\n            {\n                Container::bind(\$service, function () use (\$service, \$dependencies)\n                {\n                    return new \$service(Container::get(\$dependencies));\n                });\n            } else {\n                Container::bind(\$dependencies, function () use (\$dependencies)\n                {\n                    return new \$dependencies();\n                });\n            }\n        }\n    }\n }";
     }
 
+    public function generateDashboardControllerLogic(string $pluginPrefix): string
+    {
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class DashboardController\n{\n    protected string \$menuSlug;\n    protected string \$pageTitle;\n    protected string \$menuTitle;\n    protected string \$capability;\n    protected string \$view;\n\n    public function __construct() {\n        add_action('admin_menu', [\$this, 'addMenu']);\n    }\n\n    abstract public function addMenu(): void;\n    abstract public function processForm(): void;\n    abstract public function view(): void;\n\n    public function render(): void {\n        if (!current_user_can(\$this->capability)) {\n            wp_die(__('You do not have sufficient permissions to access this page.'));\n        }\n        if (\$_SERVER['REQUEST_METHOD'] === 'POST') {\n            \$this->processForm();\n        }\n        \$this->view();\n    }\n\n    protected function handle(string \$action, callable \$callback): void {\n        if (isset(\$_POST[\$action])) {\n            \$callback();\n        }\n    }\n}";
+    }
+
+    public function generateMenuControllerLogic(string $pluginPrefix): string
+    {
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class MenuController extends DashboardController\n{\n    public function addMenu(): void {\n        add_menu_page(\$this->pageTitle, \$this->menuTitle, \$this->capability, \$this->menuSlug, [\$this, 'render'], 'dashicons-admin-generic', 20);\n    }\n}";
+    }
+
+    public function generateSubmenuControllerLogic(string $pluginPrefix): string
+    {
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class SubmenuController extends DashboardController\n{\n    protected string \$parentSlug;\n\n    public function addMenu(): void {\n        add_submenu_page(\$this->parentSlug, \$this->pageTitle, \$this->menuTitle, \$this->capability, \$this->menuSlug, [\$this, 'render']);\n    }\n}";
+    }
     public function generateIsSingletonTraitLogic(string $pluginPrefix): string
     {
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support\\Traits;\n\ntrait IsSingleton\n{\n    private static ?self \$instance = null;\n\n    private function __construct() {}\n\n    public static function getInstance(): self\n    {\n        if (static::\$instance === null) {\n            static::\$instance = new static();\n        }\n\n        return static::\$instance;\n    }\n}";    }
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support\\Traits;\n\ntrait IsSingleton\n{\n    private static ?self \$instance = null;\n\n    private function __construct() {}\n\n    public static function getInstance(): self\n    {\n        if (static::\$instance === null) {\n            static::\$instance = new static();\n        }\n\n        return static::\$instance;\n    }\n}";
+    }
 
     public function generateContainerLogic(string $pluginPrefix): string
     {
