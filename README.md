@@ -71,6 +71,20 @@ php nikogin make:controller ExampleSubmenuController submenu example-plugin
 - 📁 Creates a directory for Controller type if it's not created already.
 - 🏗️ Generates essential class logic
 
+### Create a Migration
+
+```sh
+php nikogin make:migration <Name> <Dir> 
+```
+
+### Example 
+```sh
+php nikogin make:migration Example example-plugin 
+```
+
+### What This Command Does:
+- Creates Migration with filled name and skeleton for creating schema
+- name of table we be constructed based on wp-prefix_plugin-prefix_migration-name (wp_ep_example)
 
 ## 🛠️ Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.

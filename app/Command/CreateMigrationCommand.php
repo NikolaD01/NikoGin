@@ -23,14 +23,19 @@ class CreateMigrationCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the migration');
+        $this->addArgument('directory', InputArgument::OPTIONAL, 'The plugin directory (e.g., myplugin)');
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $name = $input->getArgument('name');
+        $dir = $input->getArgument('directory');
+
+        $outputDir = $this->migrationBuilder->create($name, $dir);
 
         $output->writeln(sprintf('<info>Migration name :</info> %s', $name));
-
+        $output->writeln(sprintf('<info>Migration directory :</info> %s', $dir));
 
         return Command::SUCCESS;
     }
