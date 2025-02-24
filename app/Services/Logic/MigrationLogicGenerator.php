@@ -14,7 +14,7 @@ class MigrationLogicGenerator
     private function logic(string $name, string $pluginPrefix): string
     {
         $lowName = strtolower($name);
-        return "<?php\n\nnamespace {$pluginPrefix}\\Http\\Database\\Migrations;\n\nuse {$pluginPrefix}\\Core\\Foundation\\Migration;\n\nclass {$name} extends Migration\n{\n    public function getTableName(): string\n    {\n        return '{$lowName}';\n    }\n\n    public function getSchema(): string\n    {\n        \$table = \$this->getFullTableName();\n        return \"CREATE TABLE IF NOT EXISTS {\$table} () {\$this->charsetCollate};\";\n    }\n}";
+        return "<?php\n\nnamespace {$pluginPrefix}\\Http\\Migrations;\n\nuse {$pluginPrefix}\\Core\\Foundation\\Migration;\n\nclass {$name} extends Migration\n{\n    public function getTableName(): string\n    {\n        return '{$lowName}';\n    }\n\n    public function getSchema(): string\n    {\n        \$table = \$this->getFullTableName();\n        return \"CREATE TABLE IF NOT EXISTS {\$table} () {\$this->charsetCollate};\";\n    }\n}";
     }
 
 
