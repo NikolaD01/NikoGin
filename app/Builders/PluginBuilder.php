@@ -31,19 +31,19 @@ class PluginBuilder
         $directories = $this->directoryService->createDirectories($pluginDir);
 
         $files = [
-            $pluginDir . "/" . strtolower($pluginName) . ".php" => $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName),
-            $directories['app'] . '/Plugin.php' => $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName),
-            $directories['foundation'] . '/ProviderManager.php' => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
-            $directories['foundation'] . '/ServiceProvider.php' => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),
-            $directories['foundation'] . '/DashboardController.php' => $this->baseLogicGenerator->generateDashboardControllerLogic($pluginPrefix),
-            $directories['foundation'] . '/MenuController.php' =>  $this->baseLogicGenerator->generateMenuControllerLogic($pluginPrefix),
-            $directories['foundation'] . '/SubmenuController.php' => $this->baseLogicGenerator->generateSubmenuControllerLogic($pluginPrefix),
-            $directories['foundation'] . '/Migration.php' => $this->baseLogicGenerator->generateMigrationLogic($pluginPrefix),
+            $pluginDir . "/" . strtolower($pluginName) . ".php"      => $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName),
+            $directories['app'] . '/Plugin.php'                      => $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName),
+            $directories['foundation'] . '/ProviderManager.php'      => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
+            $directories['foundation'] . '/ServiceProvider.php'      => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),
+            $directories['foundation'] . '/DashboardController.php'  => $this->baseLogicGenerator->generateDashboardControllerLogic($pluginPrefix),
+            $directories['foundation'] . '/MenuController.php'       => $this->baseLogicGenerator->generateMenuControllerLogic($pluginPrefix),
+            $directories['foundation'] . '/SubmenuController.php'    => $this->baseLogicGenerator->generateSubmenuControllerLogic($pluginPrefix),
+            $directories['foundation'] . '/Migration.php'            => $this->baseLogicGenerator->generateMigrationLogic($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
-            $directories['traits'] . '/IsSingleton.php' => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
-            $directories['traits'] . '/DB.php' => $this->baseLogicGenerator->generateDBLogic($pluginPrefix),
-            $directories['support'] . '/Container.php' => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
-            $directories['support'] . '/Router.php' => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
+            $directories['traits'] . '/IsSingleton.php'              => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
+            $directories['traits'] . '/DB.php'                       => $this->baseLogicGenerator->generateDBLogic($pluginPrefix),
+            $directories['support'] . '/Container.php'               => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
+            $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {

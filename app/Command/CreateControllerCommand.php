@@ -4,7 +4,6 @@ namespace NikoGin\Command;
 
 use NikoGin\Builders\ControllerBuilder;
 use NikoGin\Core\Support\Validator;
-use NikoGin\Services\Structure\DirectoryService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
