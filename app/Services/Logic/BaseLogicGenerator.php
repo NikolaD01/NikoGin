@@ -67,6 +67,17 @@ class BaseLogicGenerator
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Managers;\n\nuse {$pluginPrefix}\\Core\\Foundation\\ProviderManager;\nuse {$pluginPrefix}\\Core\\Support\\Traits\\IsSingleton;\n\nclass ServiceProviderManager extends ProviderManager\n{\n    use IsSingleton;\n\n    protected array \$providers = [];\n}";
     }
 
+    public function generateMigrationLogic(string $pluginPrefix): string
+    {
+        $pluginPrefixLowered = strtolower($pluginPrefix);
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nuse {$pluginPrefix}\\Core\\Support\\Traits\\DB;\n\nabstract class Migration\n{\n    use DB;\n    protected string \$charsetCollate;\n    protected string \$prefix = '{$pluginPrefixLowered}_';\n\n    public function __construct()\n    {\n        \$this->charsetCollate = \$this->db()->get_charset_collate();\n    }\n\n    abstract public function getTableName(): string;\n    abstract public function getSchema(): string;\n\n    public function getFullTableName(): string\n    {\n        return \$this->db()->prefix . \$this->prefix . \$this->getTableName();\n    }\n\n    public function up(): void\n    {\n        \$sql = \$this->getSchema();\n        if (!function_exists('dbDelta')) {\n            require_once ABSPATH . 'wp-admin/includes/upgrade.php';\n        }\n        dbDelta(\$sql);\n    }\n\n    public function down(): void\n    {\n        \$table = \$this->getFullTableName();\n        \$this->db()->query(\"DROP TABLE IF EXISTS {\$table}\");\n    }\n}";
+    }
+
+    public function generateDBLogic(string $pluginPrefix) : string
+    {
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support\\Traits;\n\nuse wpdb;\n\ntrait DB\n{\n    /**\n     * Get the global wpdb instance.\n     *\n     * @return wpdb\n     */\n    protected function db(): wpdb\n    {\n        global \$wpdb;\n        return \$wpdb;\n    }\n}";
+    }
+
     public function generateRouterLogic(string $pluginPrefix): string
     {
         $apiNamespace = strtolower($pluginPrefix) . "/v1";
