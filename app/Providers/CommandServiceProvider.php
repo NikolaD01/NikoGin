@@ -6,6 +6,7 @@ use Exception;
 use NikoGin\Command\CreateControllerCommand;
 use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
+use NikoGin\Command\CreateProviderCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Core\Support\Container;
 use Symfony\Component\Console\Application;
@@ -16,6 +17,7 @@ class CommandServiceProvider extends ServiceProvider
         CreatePluginCommand::class,
         CreateControllerCommand::class,
         CreateMigrationCommand::class,
+        CreateProviderCommand::class
     ];
 
     public function register(): void

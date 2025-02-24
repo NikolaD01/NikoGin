@@ -33,12 +33,13 @@ php nikogin create MyPlugin MyPluginPrefix
 ```
 
 ### What This Command Does:
-- 📁 Creates a structured directory for the plugin.
-- 🏗️ Generates essential classes like:
+-  Creates a structured directory for the plugin.
+-  Generates essential classes like:
     - `Plugin.php`
     - `ServiceProviderManager.php`
     - Other necessary components.
-- 📦 Automatically runs `composer install` to set up dependencies.
+-  Automatically runs `composer install` to set up dependencies.
+---
 
 ### Create a Controller
 
@@ -68,8 +69,9 @@ php nikogin make:controller ExampleMenuController menu wp-content/example-plugin
 php nikogin make:controller ExampleSubmenuController submenu example-plugin
 ```
 ### What This Command Does:
-- 📁 Creates a directory for Controller type if it's not created already.
-- 🏗️ Generates essential class logic
+-  Creates a directory for Controller type if it's not created already.
+-  Generates essential class logic
+---
 
 ### Create a Migration
 
@@ -85,6 +87,26 @@ php nikogin make:migration Example example-plugin
 ### What This Command Does:
 - Creates Migration with filled name and skeleton for creating schema
 - name of table we be constructed based on wp-prefix_plugin-prefix_migration-name (wp_ep_example)
+---
+
+### Create a Provider 
+
+```sh
+php nikogin make:provider <Name> <Dir>
+```
+
+### Example
+
+```sh
+php nikogin make:provider Example example-plugin
+```
+
+### What this Command Does:
+
+- Creates Provider which is automatically attached to ProviderManager
+- Ability to override base register() method
+
+---
 
 ## 🛠️ Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.
