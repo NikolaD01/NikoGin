@@ -21,6 +21,8 @@ class ProviderLogicGenerator
     private function updateServiceProviderManager(string $name, string $pluginPrefix, string $dir): void
     {
 
+        // Todo: find better solution then regex
+
         $managerPath = dirname($dir, 2) . "/Core/Managers/ServiceProviderManager.php";
 
         if (!file_exists($managerPath)) {
