@@ -28,6 +28,10 @@ class DirectoryService
         mkdir($supportDir, 0755);
         $this->directories['support'] = $supportDir;
 
+        $attributeDir = $coreDir . '/Attributes';
+        mkdir($attributeDir, 0755);
+        $this->directories['attributes'] = $attributeDir;
+
         // Create Managers directory
         $managersDir = $coreDir . '/Managers';
         mkdir($managersDir, 0755);

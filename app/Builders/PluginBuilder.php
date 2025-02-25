@@ -39,11 +39,14 @@ class PluginBuilder
             $directories['foundation'] . '/MenuController.php'       => $this->baseLogicGenerator->generateMenuControllerLogic($pluginPrefix),
             $directories['foundation'] . '/SubmenuController.php'    => $this->baseLogicGenerator->generateSubmenuControllerLogic($pluginPrefix),
             $directories['foundation'] . '/Migration.php'            => $this->baseLogicGenerator->generateMigrationLogic($pluginPrefix),
+            $directories['foundation'] . '/Listener.php'             => $this->baseLogicGenerator->generateListenerLogic($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
+            $directories['managers'] . '/ListenerManager.php'        => $this->baseLogicGenerator->generateListenerManagerLogic($pluginPrefix),
             $directories['traits'] . '/IsSingleton.php'              => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
             $directories['traits'] . '/DB.php'                       => $this->baseLogicGenerator->generateDBLogic($pluginPrefix),
             $directories['support'] . '/Container.php'               => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
             $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
+            $directories['attributes'] . '/ListenerConfig.php'          => $this->baseLogicGenerator->generateListenerConfigLogic($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {
