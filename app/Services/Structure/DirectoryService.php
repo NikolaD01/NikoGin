@@ -28,6 +28,10 @@ class DirectoryService
         mkdir($supportDir, 0755);
         $this->directories['support'] = $supportDir;
 
+        $attributeDir = $coreDir . '/Attributes';
+        mkdir($attributeDir, 0755);
+        $this->directories['attributes'] = $attributeDir;
+
         // Create Managers directory
         $managersDir = $coreDir . '/Managers';
         mkdir($managersDir, 0755);
@@ -79,6 +83,16 @@ class DirectoryService
             mkdir($directoryPath, 0755, true);
         }
 
+        return $directoryPath;
+    }
+
+    public function createListenerDirectory(string $httpDir): string
+    {
+        $directoryPath = $httpDir . '/Listeners';
+
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
         return $directoryPath;
     }
 }
