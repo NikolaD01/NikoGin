@@ -85,4 +85,14 @@ class DirectoryService
 
         return $directoryPath;
     }
+
+    public function createListenerDirectory(string $httpDir): string
+    {
+        $directoryPath = $httpDir . '/Listeners';
+
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
+        return $directoryPath;
+    }
 }

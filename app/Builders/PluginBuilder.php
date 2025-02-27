@@ -7,7 +7,9 @@ use NikoGin\Services\Structure\DirectoryService;
 
 class PluginBuilder
 {
-    public function __construct(private readonly BaseLogicGenerator $baseLogicGenerator, private readonly DirectoryService $directoryService)
+    public function __construct(
+        private readonly BaseLogicGenerator $baseLogicGenerator,
+        private readonly DirectoryService $directoryService)
     {}
 
     public function create(string $pluginName, string $pluginPrefix): string
@@ -46,7 +48,7 @@ class PluginBuilder
             $directories['traits'] . '/DB.php'                       => $this->baseLogicGenerator->generateDBLogic($pluginPrefix),
             $directories['support'] . '/Container.php'               => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
             $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
-            $directories['attributes'] . '/ListenerConfig.php'          => $this->baseLogicGenerator->generateListenerConfigLogic($pluginPrefix),
+            $directories['attributes'] . '/AsListener.php'          => $this->baseLogicGenerator->generateAsListenerLogic($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {
