@@ -14,11 +14,12 @@ class ListenerLogicGenerator
     private function logic(array $data, string $pluginPrefix) : string
     {
         $name = $data['name'];
-        $action = $data['action'] ?? 'custom_action';
+        $action = $data['listener'] ?? 'custom_action';
+        $type = $data['type'] ?? "action";
         $priority = $data['priority'] ?? 10;
         $argsCount = $data['args'] ?? 1;
 
-        return "<?php\n\nnamespace {$pluginPrefix}\\Http\\Listeners;\n\nuse {$pluginPrefix}\\Core\\Attributes\\AsListener;\nuse {$pluginPrefix}\\Core\\Foundation\\Listener;\n\n#[AsListener('{$action}', priority: {$priority}, argsCount: {$argsCount})]\nclass {$name} extends Listener\n{\n    public function handle(mixed ...\$args): void\n    {\n        // Handle the {$action} action\n    }\n}";
+        return "<?php\n\nnamespace {$pluginPrefix}\\Http\\Listeners;\n\nuse {$pluginPrefix}\\Core\\Attributes\\AsListener;\nuse {$pluginPrefix}\\Core\\Foundation\\Listener;\n\n#[AsListener(name: '{$action}', type: '{$type}', priority: {$priority}, argsCount: {$argsCount})]\nclass {$name} extends Listener\n{\n    public function handle(mixed ...\$args): void\n    {\n        // Handle the {$action} action\n    }\n}";
     }
 
     private function registerListener(string $name, string $pluginPrefix, string $dir): void
@@ -36,7 +37,7 @@ class ListenerLogicGenerator
 
         if(!str_contains($managerContent, $classReference)) {
             $managerContent = preg_replace(
-                '/protected array\s+\$listeners\s*=\s*\[/',
+                '/protected array\s+`\$listeners\s*=\s*\[/',
                 "protected array \$listeners = [\n        {$classReference}::class,",
                 $managerContent,
                 1
