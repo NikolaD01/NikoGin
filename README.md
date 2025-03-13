@@ -111,20 +111,20 @@ php nikogin make:provider Example example-plugin
 ### Create a Listener
 
 ```sh
-php nikogin make:listener <Name> <Action> <Dir> optional <Args> <Priorty>
+php nikogin make:listener <Name> <Listener> <Dir> optional <Filter> <Args> <Priorty>
 ```
 
 ### Example 
 
 ```sh
-php nikogin make:listener PostSave save_post example --args=2 --priority=10
+php nikogin make:listener PostSave save_post example pre_get_post --args=2 --priority=10
 ```
 
 ### What this Command Does:
 
-- Creates a Listener for Wordpress action
+- Creates a Listener for Wordpress action or filter
 - Has ability to define number of arguments and priority level
-- Utilize handle method as callback on action trigger
+- Utilize handle method as callback on action/filter trigger
 
 ---
 
