@@ -111,13 +111,13 @@ php nikogin make:provider Example example-plugin
 ### Create a Listener
 
 ```sh
-php nikogin make:listener <Name> <Listener> <Dir> optional <Filter> <Args> <Priorty>
+php nikogin make:listener <Name> <Listener> <Dir> optional <Type> <Args> <Priorty>
 ```
 
 ### Example 
 
 ```sh
-php nikogin make:listener PostSave save_post example pre_get_post --args=2 --priority=10
+php nikogin make:listener PostSave save_post example action --args=2 --priority=10
 ```
 
 ### What this Command Does:
