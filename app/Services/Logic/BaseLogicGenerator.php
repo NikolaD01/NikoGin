@@ -69,7 +69,54 @@ class BaseLogicGenerator
 
     public function generateListenerManagerLogic(string $pluginPrefix): string
     {
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Managers;\n\nuse ReflectionClass;\nuse {$pluginPrefix}\\Core\\Foundation\\Listener;\nuse {$pluginPrefix}\\Core\\Attributes\\AsListener;\n\nclass ListenerManager\n{\n    protected array \$listeners = [];\n\n    public function register(): void\n    {\n        foreach (\$this->listeners as \$listenerClass) {\n            if (!is_subclass_of(\$listenerClass, Listener::class)) {\n                continue;\n            }\n\n            \$reflection = new ReflectionClass(\$listenerClass);\n            \$attributes = \$reflection->getAttributes(AsListener::class);\n\n            if (empty(\$attributes)) {\n                continue;\n            }\n\n            /** @var AsListener \$config */\n            \$config = \$attributes[0]->newInstance();\n\n            \$listenerInstance = new \$listenerClass();\n\n            if (!has_action(\$config->hook, [\$listenerInstance, 'handle'])) {\n                add_action(\$config->hook, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);\n            }\n        }\n    }\n}";
+        return "<?php
+
+        namespace {$pluginPrefix}\\Core\\Managers;
+        
+        use ReflectionClass;
+        use {$pluginPrefix}\\Core\Foundation\\Listener;
+        use {$pluginPrefix}\\Core\\Attributes\\AsListener;
+        
+        class ListenerManager
+        {
+            protected array \$listeners = [];
+        
+            public function registerListener(string \$listenerClass): void
+            {
+                if (!is_subclass_of(\$listenerClass, Listener::class)) {
+                    return;
+                }
+        
+                \$this->listeners[] = \$listenerClass;
+            }
+        
+            public function register(): void
+            {
+                foreach (\$this->listeners as \$listenerClass) {
+                    \$reflection = new ReflectionClass(\$listenerClass);
+                    \$attributes = \$reflection->getAttributes(AsListener::class);
+        
+                    if (empty(\$attributes)) {
+                        continue;
+                    }
+        
+                    /** @var AsListener \$config */
+                    \$config = \$attributes[0]->newInstance();
+        
+                    \$listenerInstance = new \$listenerClass();
+        
+                    if (\$config->type === 'hook') {
+                        if (!has_action(\$config->hook, [\$listenerInstance, 'handle'])) {
+                            add_action(\$config->hook, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);
+                        }
+                    } elseif (\$config->type === 'filter') {
+                        if (!has_filter(\$config->hook, [\$listenerInstance, 'handle'])) {
+                            add_filter(\$config->hook, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);
+                        }
+                    }
+                }
+            }
+        }";
     }
 
     public function generateMigrationLogic(string $pluginPrefix): string
@@ -90,7 +137,7 @@ class BaseLogicGenerator
 
     public function generateAsListenerLogic(string $pluginPrefix): string
     {
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Attributes;\n\nuse Attribute;\n\n#[Attribute(Attribute::TARGET_CLASS)]\nclass AsListener\n{\n    public function __construct(\n        public string \$hook,\n        public int \$priority = 10,\n        public int \$argsCount = 1\n    ) {}\n}";
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Attributes;\n\nuse Attribute;\n\n#[Attribute(Attribute::TARGET_CLASS)]\nclass AsListener\n{\n    public function __construct(\n        public string \$name,\n    public string \$type,\n   public int \$priority = 10,\n        public int \$argsCount = 1\n    ) {}\n}";
     }
 
 
