@@ -17,7 +17,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 )]
 class CreateControllerCommand extends Command
 {
-    public function __construct(private ControllerBuilder $controllerBuilder)
+    public function __construct(private readonly ControllerBuilder $controllerBuilder)
     {
         parent::__construct();
     }

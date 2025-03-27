@@ -14,6 +14,7 @@ use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Command\CreateProviderCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Services\Logic\BaseLogicGenerator;
+use NikoGin\Services\Logic\ContractsLogicGenerator;
 use NikoGin\Services\Logic\ControllerLogicGenerator;
 use NikoGin\Services\Logic\ListenerLogicGenerator;
 use NikoGin\Services\Logic\MigrationLogicGenerator;
@@ -30,11 +31,13 @@ class AppServiceProvider extends ServiceProvider
         MigrationLogicGenerator::class,
         ProviderLogicGenerator::class,
         ListenerLogicGenerator::class,
+        ContractsLogicGenerator::class,
+
 
         ProviderBuilder::class         => [ProviderLogicGenerator::class],
         MigrationBuilder::class        => [MigrationLogicGenerator::class],
         ControllerBuilder::class       => [DirectoryService::class, ControllerLogicGenerator::class],
-        PluginBuilder::class           => [BaseLogicGenerator::class, DirectoryService::class],
+        PluginBuilder::class           => [BaseLogicGenerator::class, DirectoryService::class, ContractsLogicGenerator::class],
         ListenerBuilder::class         => [ListenerLogicGenerator::class, DirectoryService::class],
 
         CreatePluginCommand::class     => [PluginBuilder::class],

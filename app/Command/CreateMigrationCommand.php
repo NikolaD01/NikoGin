@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class CreateMigrationCommand extends Command
 {
-    public function __construct(private MigrationBuilder $migrationBuilder)
+    public function __construct(private readonly MigrationBuilder $migrationBuilder)
     {
         parent::__construct();
     }

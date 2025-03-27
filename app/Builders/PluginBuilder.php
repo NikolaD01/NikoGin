@@ -3,13 +3,16 @@
 namespace NikoGin\Builders;
 
 use NikoGin\Services\Logic\BaseLogicGenerator;
+use NikoGin\Services\Logic\ContractsLogicGenerator;
 use NikoGin\Services\Structure\DirectoryService;
 
 class PluginBuilder
 {
     public function __construct(
         private readonly BaseLogicGenerator $baseLogicGenerator,
-        private readonly DirectoryService $directoryService)
+        private readonly DirectoryService $directoryService,
+        private readonly ContractsLogicGenerator $contractsLogicGenerator,
+    )
     {}
 
     public function create(string $pluginName, string $pluginPrefix): string
@@ -49,6 +52,7 @@ class PluginBuilder
             $directories['support'] . '/Container.php'               => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
             $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
             $directories['attributes'] . '/AsListener.php'          => $this->baseLogicGenerator->generateAsListenerLogic($pluginPrefix),
+            $directories['contracts'] . '/CronInterface.php'        => $this->contractsLogicGenerator->generateCronInterface($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {
