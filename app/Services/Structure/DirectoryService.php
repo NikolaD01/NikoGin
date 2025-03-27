@@ -32,6 +32,10 @@ class DirectoryService
         mkdir($attributeDir, 0755);
         $this->directories['attributes'] = $attributeDir;
 
+        $contractsDir = $coreDir . '/Contracts';
+        mkdir($contractsDir, 0755);
+        $this->directories['contracts'] = $contractsDir;
+
         // Create Managers directory
         $managersDir = $coreDir . '/Managers';
         mkdir($managersDir, 0755);

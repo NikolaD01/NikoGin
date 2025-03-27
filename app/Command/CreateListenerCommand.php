@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class CreateListenerCommand extends Command
 {
-    public function __construct(private ListenerBuilder $listenerBuilder)
+    public function __construct(private readonly ListenerBuilder $listenerBuilder)
     {
         parent::__construct();
     }

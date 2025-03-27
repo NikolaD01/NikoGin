@@ -4,6 +4,7 @@ namespace NikoGin\Providers;
 
 use Exception;
 use NikoGin\Command\CreateControllerCommand;
+use NikoGin\Command\CreateCronCommand;
 use NikoGin\Command\CreateListenerCommand;
 use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
@@ -20,6 +21,8 @@ class CommandServiceProvider extends ServiceProvider
         CreateMigrationCommand::class,
         CreateProviderCommand::class,
         CreateListenerCommand::class,
+        CreateCronCommand::class,
+
     ];
 
     public function register(): void
