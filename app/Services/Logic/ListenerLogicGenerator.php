@@ -37,7 +37,7 @@ class ListenerLogicGenerator
 
         if(!str_contains($managerContent, $classReference)) {
             $managerContent = preg_replace(
-                '/protected array\s+`\$listeners\s*=\s*\[/',
+                '/protected array\s+\$listeners\s*=\s*\[/',
                 "protected array \$listeners = [\n        {$classReference}::class,",
                 $managerContent,
                 1
