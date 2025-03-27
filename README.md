@@ -19,6 +19,18 @@ To install this package via Composer, run:
 ```sh
 composer require nikogin/plugin-generator
 ```
+---
+### Notice !!!
+Since **NikoGin** is still in development some things still needs to be polished,
+for current use its best to install **NikoGin** inside **wp-content/plugins** folder and add to **.gitignore**,
+when I manage to put it to composer, It will be moved as global package.
+
+Important thing now is also that most bootstrap inside plugin will be needed to be done manually what does that mean ?
+For example when you create multiple **Providers** you will need to manually add them to providers in **ProviderManager** inside **Core** of framework.
+
+In future all of this will be covered for now just keep in mind that some things need manual setup. 
+Enjoy programing :) 
+---
 
 ## 🔧 Usage
 ### Create a New Plugin
@@ -125,6 +137,24 @@ php nikogin make:listener PostSave save_post example action --args=2 --priority=
 - Creates a Listener for Wordpress action or filter
 - Has ability to define number of arguments and priority level
 - Utilize handle method as callback on action/filter trigger
+
+---
+
+### Create a Cron
+
+```sh
+php nikogin make:crong <Name> <Dir>
+```
+
+### Example
+
+```sh
+php nikogin make:cron ExampleCron exampledir
+```
+
+### What this Command Does:
+
+- Creates a Cron action for Wordpress
 
 ---
 
