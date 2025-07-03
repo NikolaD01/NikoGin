@@ -158,6 +158,25 @@ php nikogin make:cron ExampleCron exampledir
 
 ---
 
+## Incoming
+This is list of incoming features and commands : \
+**BE** 
+- Jobs (Depending on WooCommerce Action Scheduler (subject to change), wordpress background processes)
+- Repositories
+- Middlewares (Package inside core with already done middlewares also ability to make new ones, this is for REST routing security)
+- Controller (Rest Controller)
+- Shortcodes (Command to create shortcodes nothing special)
+- Wordpress component extension (Ability to easy extend any wordpress component as WpTable ) (Subject to change)
+- Commands (Extend WP CLI, create commands)
+- Seeders
+- Support Elements ( as Symfony d/dd etc ... ) \
+**FE** \
+Idea here is when we want to create new plugin, we can have starter kits or none.
+With starter kits we can choose how we will make dashboards and what would be used as bundler.
+For example goal is that user can choose react, twig or base php , so for react we can use wp-scripts,
+for twig or php we can use vite with typescript , and at end user can choose vanilla js without bundlers 
+---
+
 ## Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.
 
