@@ -106,12 +106,12 @@ class BaseLogicGenerator
                     \$listenerInstance = new \$listenerClass();
         
                     if (\$config->type === 'hook') {
-                        if (!has_action(\$config->hook, [\$listenerInstance, 'handle'])) {
-                            add_action(\$config->hook, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);
+                        if (!has_action(\$config->name, [\$listenerInstance, 'handle'])) {
+                            add_action(\$config->name, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);
                         }
                     } elseif (\$config->type === 'filter') {
-                        if (!has_filter(\$config->hook, [\$listenerInstance, 'handle'])) {
-                            add_filter(\$config->hook, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);
+                        if (!has_filter(\$config->name, [\$listenerInstance, 'handle'])) {
+                            add_filter(\$config->name, [\$listenerInstance, 'handle'], \$config->priority, \$config->argsCount);
                         }
                     }
                 }

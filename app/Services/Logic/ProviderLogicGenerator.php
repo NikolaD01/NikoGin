@@ -38,7 +38,7 @@ class ProviderLogicGenerator
 
         $importStatement = "use {$className};\n";
         if (!str_contains($fileContent, $importStatement)) {
-            $fileContent = preg_replace('/<\?php\n\nnamespace [^;]+;/', "<?php\n\nnamespace sf\\Core\\Managers;\n\n$importStatement", $fileContent, 1);
+            $fileContent = preg_replace('/<\?php\n\nnamespace [^;]+;/', "<?php\n\nnamespace {$pluginPrefix}\\Core\\Managers;\n\n$importStatement", $fileContent, 1);
         }
         // Find the `$providers` array and insert the new provider
         $updatedContent = preg_replace(

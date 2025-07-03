@@ -1,6 +1,6 @@
 # NikoGin - WordPress Plugin Generator
 
-## 🚀 Introduction
+##  Introduction
 NikoGin automates the creation of a structured WordPress plugin, ensuring best practices in directory setup, class generation, and Composer integration. It emphasizes:
 
 - Dependency injection
@@ -8,13 +8,13 @@ NikoGin automates the creation of a structured WordPress plugin, ensuring best p
 - Autoloading via Composer
 - CLI-based plugin creation
 
-## ✨ Features
-- 📂 Generates a complete WordPress plugin structure.
-- 🔧 Includes service providers for dependency management.
-- 📜 Uses Composer for autoloading.
-- 🖥️ Provides a CLI command to create a new plugin.
+##  Features
+-  Generates a complete WordPress plugin structure.
+-  Includes service providers for dependency management.
+-  Uses Composer for autoloading.
+- 🖥 Provides a CLI command to create a new plugin.
 
-## 📥 Installation
+##  Installation
 To install this package via Composer, run:
 ```sh
 composer require nikogin/plugin-generator
@@ -32,7 +32,7 @@ In future all of this will be covered for now just keep in mind that some things
 Enjoy programing :) 
 ---
 
-## 🔧 Usage
+##  Usage
 ### Create a New Plugin
 Run the following command to generate a new WordPress plugin:
 ```sh
@@ -143,7 +143,7 @@ php nikogin make:listener PostSave save_post example action --args=2 --priority=
 ### Create a Cron
 
 ```sh
-php nikogin make:crong <Name> <Dir>
+php nikogin make:cron <Name> <Dir>
 ```
 
 ### Example
@@ -158,12 +158,12 @@ php nikogin make:cron ExampleCron exampledir
 
 ---
 
-## 🛠️ Contributing
+## Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.
 
-## 📄 License
+## License
 This project is licensed under the MIT License.
 
 ---
-🔗 **Stay Updated:** Follow updates and improvements to the package. Happy coding! 🚀
+ **Stay Updated:** Follow updates and improvements to the package. Happy coding! 
 
