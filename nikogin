@@ -1,8 +1,6 @@
 #!/user/bin/env php
 <?php
 
-// application.php
-
 use NikoGin\Managers\ServiceProviderManager;
 
 require __DIR__ . '/vendor/autoload.php';

@@ -44,7 +44,7 @@ php nikogin create <PluginName> <PluginPrefix>
 php nikogin create MyPlugin MyPluginPrefix
 ```
 
-### What This Command Does:
+### Description:
 -  Creates a structured directory for the plugin.
 -  Generates essential classes like:
     - `Plugin.php`
@@ -80,7 +80,7 @@ php nikogin make:controller ExampleMenuController menu wp-content/example-plugin
 ```sh
 php nikogin make:controller ExampleSubmenuController submenu example-plugin
 ```
-### What This Command Does:
+### Description:
 -  Creates a directory for Controller type if it's not created already.
 -  Generates essential class logic
 ---
@@ -96,7 +96,7 @@ php nikogin make:migration <Name> <Dir>
 php nikogin make:migration Example example-plugin 
 ```
 
-### What This Command Does:
+### Description:
 - Creates Migration with filled name and skeleton for creating schema
 - name of table we be constructed based on wp-prefix_plugin-prefix_migration-name (wp_ep_example)
 ---
@@ -113,7 +113,7 @@ php nikogin make:provider <Name> <Dir>
 php nikogin make:provider Example example-plugin
 ```
 
-### What this Command Does:
+### Description:
 
 - Creates Provider which is automatically attached to ProviderManager
 - Ability to override base register() method
@@ -132,7 +132,7 @@ php nikogin make:listener <Name> <Listener> <Dir> optional <Type> <Args> <Priort
 php nikogin make:listener PostSave save_post example action --args=2 --priority=10
 ```
 
-### What this Command Does:
+### Description:
 
 - Creates a Listener for Wordpress action or filter
 - Has ability to define number of arguments and priority level
@@ -152,9 +152,26 @@ php nikogin make:cron <Name> <Dir>
 php nikogin make:cron ExampleCron exampledir
 ```
 
-### What this Command Does:
+### Description:
 
 - Creates a Cron action for Wordpress
+
+---
+
+### Create a Repository
+
+```sh
+php nikogin make:repository <Name> <Table> <Dir>
+```
+
+### Example
+```sh
+php nikogin make:repository ExampleName example_table example/
+```
+
+### Description: 
+- Creates a Repository for given table
+
 
 ---
 
@@ -162,14 +179,14 @@ php nikogin make:cron ExampleCron exampledir
 This is list of incoming features and commands : \
 **BE** 
 - Jobs (Depending on WooCommerce Action Scheduler (subject to change), wordpress background processes)
-- Repositories
 - Middlewares (Package inside core with already done middlewares also ability to make new ones, this is for REST routing security)
 - Controller (Rest Controller)
 - Shortcodes (Command to create shortcodes nothing special)
 - Wordpress component extension (Ability to easy extend any wordpress component as WpTable ) (Subject to change)
 - Commands (Extend WP CLI, create commands)
 - Seeders
-- Support Elements ( as Symfony d/dd etc ... ) \
+- Support Elements ( as Symfony d/dd etc ... ) 
+- API Foundation Support \
 **FE** \
 Idea here is when we want to create new plugin, we can have starter kits or none.
 With starter kits we can choose how we will make dashboards and what would be used as bundler.

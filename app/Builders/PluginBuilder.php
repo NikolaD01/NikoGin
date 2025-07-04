@@ -45,14 +45,15 @@ class PluginBuilder
             $directories['foundation'] . '/SubmenuController.php'    => $this->baseLogicGenerator->generateSubmenuControllerLogic($pluginPrefix),
             $directories['foundation'] . '/Migration.php'            => $this->baseLogicGenerator->generateMigrationLogic($pluginPrefix),
             $directories['foundation'] . '/Listener.php'             => $this->baseLogicGenerator->generateListenerLogic($pluginPrefix),
+            $directories['foundation'] . '/Repository.php'           => $this->baseLogicGenerator->generateRepository($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
             $directories['managers'] . '/ListenerManager.php'        => $this->baseLogicGenerator->generateListenerManagerLogic($pluginPrefix),
             $directories['traits'] . '/IsSingleton.php'              => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
             $directories['traits'] . '/DB.php'                       => $this->baseLogicGenerator->generateDBLogic($pluginPrefix),
             $directories['support'] . '/Container.php'               => $this->baseLogicGenerator->generateContainerLogic($pluginPrefix),
             $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
-            $directories['attributes'] . '/AsListener.php'          => $this->baseLogicGenerator->generateAsListenerLogic($pluginPrefix),
-            $directories['contracts'] . '/CronInterface.php'        => $this->contractsLogicGenerator->generateCronInterface($pluginPrefix),
+            $directories['attributes'] . '/AsListener.php'           => $this->baseLogicGenerator->generateAsListenerLogic($pluginPrefix),
+            $directories['contracts'] . '/CronInterface.php'         => $this->contractsLogicGenerator->generateCronInterface($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {

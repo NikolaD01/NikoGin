@@ -74,6 +74,17 @@ class DirectoryService
         return $this->directories;
     }
 
+    /*
+     * This is universal method for creating single level directors
+     */
+    public function createDir(string $httpDir, string $dirName): string
+    {
+        $directoryPath =  $httpDir . '/' . $dirName;
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
+        return $directoryPath;
+    }
     public function createControllerDirectories(string $controllerDir, string $type): string
     {
         $directoryPath = match ($type) {

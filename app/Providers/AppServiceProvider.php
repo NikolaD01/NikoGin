@@ -8,12 +8,14 @@ use NikoGin\Builders\ListenerBuilder;
 use NikoGin\Builders\MigrationBuilder;
 use NikoGin\Builders\PluginBuilder;
 use NikoGin\Builders\ProviderBuilder;
+use NikoGin\Builders\RepositoryBuilder;
 use NikoGin\Command\CreateControllerCommand;
 use NikoGin\Command\CreateCronCommand;
 use NikoGin\Command\CreateListenerCommand;
 use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Command\CreateProviderCommand;
+use NikoGin\Command\CreateRepositoryCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Services\Logic\BaseLogicGenerator;
 use NikoGin\Services\Logic\ContractsLogicGenerator;
@@ -22,6 +24,7 @@ use NikoGin\Services\Logic\CronLogicGenerator;
 use NikoGin\Services\Logic\ListenerLogicGenerator;
 use NikoGin\Services\Logic\MigrationLogicGenerator;
 use NikoGin\Services\Logic\ProviderLogicGenerator;
+use NikoGin\Services\Logic\RepositoryLogicGenerator;
 use NikoGin\Services\Structure\DirectoryService;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         ListenerLogicGenerator::class,
         ContractsLogicGenerator::class,
         CronLogicGenerator::class,
+        RepositoryLogicGenerator::class,
 
         ProviderBuilder::class   => [ProviderLogicGenerator::class],
         MigrationBuilder::class  => [MigrationLogicGenerator::class],
@@ -43,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         PluginBuilder::class     => [BaseLogicGenerator::class, DirectoryService::class, ContractsLogicGenerator::class],
         ListenerBuilder::class   => [ListenerLogicGenerator::class, DirectoryService::class],
         CronBuilder::class => [CronLogicGenerator::class],
+        RepositoryBuilder::class => [DirectoryService::class,RepositoryLogicGenerator::class],
 
         CreatePluginCommand::class     => [PluginBuilder::class],
         CreateControllerCommand::class => [ControllerBuilder::class],
@@ -50,5 +55,6 @@ class AppServiceProvider extends ServiceProvider
         CreateProviderCommand::class   => [ProviderBuilder::class],
         CreateListenerCommand::class   => [ListenerBuilder::class],
         CreateCronCommand::class => [CronBuilder::class],
+        CreateRepositoryCommand::class => [RepositoryBuilder::class],
     ];
 }

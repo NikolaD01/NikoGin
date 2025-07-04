@@ -130,16 +130,10 @@ class BaseLogicGenerator
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class Listener\n{\n\n    abstract public function handle(mixed ...\$args): void;\n}";
     }
 
-    public function generateDBLogic(string $pluginPrefix) : string
-    {
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support\\Traits;\n\nuse wpdb;\n\ntrait DB\n{\n    /**\n     * Get the global wpdb instance.\n     *\n     * @return wpdb\n     */\n    protected function db(): wpdb\n    {\n        global \$wpdb;\n        return \$wpdb;\n    }\n}";
-    }
-
     public function generateAsListenerLogic(string $pluginPrefix): string
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Attributes;\n\nuse Attribute;\n\n#[Attribute(Attribute::TARGET_CLASS)]\nclass AsListener\n{\n    public function __construct(\n        public string \$name,\n    public string \$type,\n   public int \$priority = 10,\n        public int \$argsCount = 1\n    ) {}\n}";
     }
-
 
     public function generateRouterLogic(string $pluginPrefix): string
     {
@@ -182,5 +176,133 @@ class BaseLogicGenerator
             'prefer-stable' => true,
         ];
     }
+
+    // Repository + DB trait
+    public function generateDBLogic(string $pluginPrefix) : string
+    {
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support\\Traits;\n\nuse wpdb;\n\ntrait DB\n{\n    /**\n     * Get the global wpdb instance.\n     *\n     * @return wpdb\n     */\n    protected function db(): wpdb\n    {\n        global \$wpdb;\n        return \$wpdb;\n    }\n}";
+    }
+    public function generateRepository(string $pluginPrefix): string
+    {
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\\Core\\Foundation;
+
+use {$pluginPrefix}\\Core\\Support\\Traits\\DB;
+
+abstract class Repository
+{
+    use DB;
+
+    protected string \$table;
+
+    public function __construct(string \$tableName)
+    {
+        \$this->table = \$this->table(\$tableName);
+    }
+
+    public function getTable(): string
+    {
+        return \$this->table;
+    }
+
+    /**
+     * Get the table name with prefix.
+     */
+    protected function table(string \$tableName): string
+    {
+        return \$this->db()->prefix . \$tableName;
+    }
+
+    /**
+     * Insert a record into the table.
+     */
+    public function insert(array \$data): int
+    {
+        \$this->db()->insert(\$this->table, \$data);
+        return \$this->db()->insert_id;
+    }
+
+    /**
+     * Update a record in the table.
+     */
+    public function update(array \$data, array \$where): bool|int
+    {
+        return \$this->db()->update(\$this->table, \$data, \$where);
+    }
+
+    /**
+     * Delete a record from the table.
+     */
+    public function delete(string \$condition, array \$values = []): bool|int
+    {
+        \$sql = "DELETE FROM {\$this->table} WHERE {\$condition}";
+        \$prepared = \$this->db()->prepare(\$sql, \$values);
+        return \$this->db()->query(\$prepared);
+    }
+
+    /**
+     * Get all records from the table, optionally ordered.
+     */
+    public function getAll(string \$orderBy = null): array
+    {
+        \$sql = "SELECT * FROM {\$this->table}";
+        if (\$orderBy) {
+            \$sql .= " ORDER BY {\$orderBy}";
+        }
+        return \$this->db()->get_results(\$sql);
+    }
+
+    /**
+     * Get records with WHERE and custom SELECT columns.
+     */
+    public function getAllWhere(array \$where = null, array \$select = null): ?array
+    {
+        \$columns = '*';
+        if (\$select) {
+            \$columns = implode(', ', array_map(fn(\$col) => "`{\$col}`", \$select));
+        }
+
+        \$conditions = [];
+        \$values = [];
+        if (\$where) {
+            foreach (\$where as \$key => \$value) {
+                if (stripos(\$key, 'LIKE') !== false) {
+                    \$col = str_replace(' LIKE', '', \$key);
+                    \$conditions[] = "`{\$col}` LIKE %s";
+                    \$values[]     = \$value;
+                } else {
+                    \$conditions[] = "`{\$key}` = %s";
+                    \$values[]     = \$value;
+                }
+            }
+        }
+
+        \$sql = "SELECT {\$columns} FROM {\$this->table}";
+        if (\$conditions) {
+            \$sql .= " WHERE " . implode(" AND ", \$conditions);
+        }
+
+        \$prepared = \$this->db()->prepare(\$sql, \$values);
+        return \$this->db()->get_results(\$prepared);
+    }
+
+    /**
+     * Get a single record by conditions.
+     */
+    public function getOne(array \$where): ?object
+    {
+        \$parts = [];
+        foreach (\$where as \$col => \$val) {
+            \$parts[] = \$this->db()->prepare("`{\$col}` = %s", \$val);
+        }
+        \$sql = "SELECT * FROM {\$this->table} WHERE " . implode(' AND ', \$parts) . " LIMIT 1";
+        return \$this->db()->get_row(\$sql);
+    }
+}
+PHP;
+    }
+
 }
 
