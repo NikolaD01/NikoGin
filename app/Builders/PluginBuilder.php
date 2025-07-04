@@ -21,7 +21,7 @@ class PluginBuilder
         if (!mkdir($pluginDir, 0755, true) && !is_dir($pluginDir)) {
             throw new \RuntimeException('Failed to create plugin directory.');
         }
-        $composerJson = $this->baseLogicGenerator->generateComposerJson($pluginName, $pluginPrefix);
+        $composerJson = $this->baseLogicGenerator->generateComposerJson($directorySlug, $pluginPrefix);
         file_put_contents($pluginDir . '/composer.json', json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         $this->createStructure($pluginDir, $pluginPrefix, $pluginName, $directorySlug);
