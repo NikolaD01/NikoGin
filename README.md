@@ -90,6 +90,15 @@ After completing the above steps, verify that the installation was successful by
 nikogin --version
 ```
 
+### 5. Keeping NikoGin updated.
+Since the project is still in the development phase and there are frequent changes,
+you will need to pull the latest changes and bug fixes periodically. You can easily do this
+by running Composer's global `update` command:
+
+```sh
+composer global update nikolad/nikogin
+```
+
 ##  Usage
 ### Create a New Plugin
 Run the following command to generate a new WordPress plugin:
