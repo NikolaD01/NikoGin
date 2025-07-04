@@ -175,13 +175,28 @@ php nikogin make:repository ExampleName example_table example/
 
 ---
 
+### Create a Shortcode
+
+```sh
+php nikogin make:shortcode <Name> <Action> <Dir>
+```
+
+### Example
+```sh
+php nikogin make:shortcode ExampleName example_action example/
+```
+
+### Description:
+- Creates a Shortcode for given action
+
+---
+
 ## Incoming
 This is list of incoming features and commands : \
 **BE** 
 - Jobs (Depending on WooCommerce Action Scheduler (subject to change), wordpress background processes)
 - Middlewares (Package inside core with already done middlewares also ability to make new ones, this is for REST routing security)
 - Controller (Rest Controller)
-- Shortcodes (Command to create shortcodes nothing special)
 - Wordpress component extension (Ability to easy extend any wordpress component as WpTable ) (Subject to change)
 - Commands (Extend WP CLI, create commands)
 - Seeders

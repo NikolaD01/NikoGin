@@ -119,12 +119,49 @@ class BaseLogicGenerator
         }";
     }
 
+    // Migration
     public function generateMigrationLogic(string $pluginPrefix): string
     {
         $pluginPrefixLowered = strtolower($pluginPrefix);
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nuse {$pluginPrefix}\\Core\\Support\\Traits\\DB;\n\nabstract class Migration\n{\n    use DB;\n    protected string \$charsetCollate;\n    protected string \$prefix = '{$pluginPrefixLowered}_';\n\n    public function __construct()\n    {\n        \$this->charsetCollate = \$this->db()->get_charset_collate();\n    }\n\n    abstract public function getTableName(): string;\n    abstract public function getSchema(): string;\n\n    public function getFullTableName(): string\n    {\n        return \$this->db()->prefix . \$this->prefix . \$this->getTableName();\n    }\n\n    public function up(): void\n    {\n        \$sql = \$this->getSchema();\n        if (!function_exists('dbDelta')) {\n            require_once ABSPATH . 'wp-admin/includes/upgrade.php';\n        }\n        dbDelta(\$sql);\n    }\n\n    public function down(): void\n    {\n        \$table = \$this->getFullTableName();\n        \$this->db()->query(\"DROP TABLE IF EXISTS {\$table}\");\n    }\n}";
     }
 
+   // Shortcode Component
+    public function generateShortcode(string $pluginPrefix): string
+    {
+        return "<?php
+
+namespace {$pluginPrefix}\\Core\\Foundation;
+
+use Exception;
+
+abstract class Shortcode
+{
+    protected string \$tag;
+
+    /**
+     * @throws Exception
+     */
+    public function __construct(string \$tag)
+    {
+        \$this->tag = \$tag;
+        if (empty(\$this->tag)) {
+            throw new Exception('Shortcode tag is not defined in ' . static::class);
+        }
+
+        add_shortcode(\$this->tag, [\$this, 'handle']);
+    }
+
+    /**
+     * Must be implemented by all subclasses.
+     *
+     * @param array<string, mixed> \$attrs
+     * @param string|null          \$content
+     * @return string
+     */
+    abstract public function handle(array \$attrs = [], string \$content = null): string;
+}";
+    }
     public function generateListenerLogic(string $pluginPrefix): string
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class Listener\n{\n\n    abstract public function handle(mixed ...\$args): void;\n}";
@@ -165,7 +202,6 @@ class BaseLogicGenerator
             'license' => 'MIT',
             'require' => [
                 'php' => '>=8.1',
-                "woocommerce/action-scheduler" => "^3.9",
             ],
             'autoload' => [
                 'psr-4' => [
@@ -303,6 +339,7 @@ abstract class Repository
 }
 PHP;
     }
+
 
 }
 

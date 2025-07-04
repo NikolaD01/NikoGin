@@ -10,6 +10,7 @@ use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Command\CreateProviderCommand;
 use NikoGin\Command\CreateRepositoryCommand;
+use NikoGin\Command\CreateShortcodeCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Core\Support\Container;
 use Symfony\Component\Console\Application;
@@ -23,7 +24,8 @@ class CommandServiceProvider extends ServiceProvider
         CreateProviderCommand::class,
         CreateListenerCommand::class,
         CreateCronCommand::class,
-        CreateRepositoryCommand::class
+        CreateRepositoryCommand::class,
+        CreateShortcodeCommand::class
 
     ];
 

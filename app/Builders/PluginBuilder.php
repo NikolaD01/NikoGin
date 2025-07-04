@@ -46,6 +46,7 @@ class PluginBuilder
             $directories['foundation'] . '/Migration.php'            => $this->baseLogicGenerator->generateMigrationLogic($pluginPrefix),
             $directories['foundation'] . '/Listener.php'             => $this->baseLogicGenerator->generateListenerLogic($pluginPrefix),
             $directories['foundation'] . '/Repository.php'           => $this->baseLogicGenerator->generateRepository($pluginPrefix),
+            $directories['foundation'] . '/Shortcode.php'            => $this->baseLogicGenerator->generateShortcode($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => $this->baseLogicGenerator->generateServiceProviderManagerLogic($pluginPrefix),
             $directories['managers'] . '/ListenerManager.php'        => $this->baseLogicGenerator->generateListenerManagerLogic($pluginPrefix),
             $directories['traits'] . '/IsSingleton.php'              => $this->baseLogicGenerator->generateIsSingletonTraitLogic($pluginPrefix),
