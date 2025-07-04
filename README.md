@@ -60,7 +60,7 @@ Now, run the require command using the specific branch you want to install. The 
 composer global require nikolad/nikogin:"dev-main"
 ```
 
-Note: If this is your first time interacting with private GitHub repositories via Composer, you may be prompted to create and provide a Personal Access Token. If it is this first time doing this refer to the [Official GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+Note: If this is your first time interacting with private GitHub repositories via Composer, you may be prompted to create and provide a Personal Access Token. If it is this first time doing this refer to the [Official GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
 
 ### 3. Update your system's PATH
 To run the nikogin command directly, you must add Composer's global bin directory to your system's PATH.
@@ -90,7 +90,7 @@ After completing the above steps, verify that the installation was successful by
 nikogin --version
 ```
 
-### 5. Keeping NikoGin updated.
+### 5. Keeping NikoGin updated
 Since the project is still in the development phase and there are frequent changes,
 you will need to pull the latest changes and bug fixes periodically. You can easily do this
 by running Composer's global `update` command:
