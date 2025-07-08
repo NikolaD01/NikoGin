@@ -1,48 +1,119 @@
 # NikoGin - WordPress Plugin Generator
 
-##  Introduction
-NikoGin automates the creation of a structured WordPress plugin, ensuring best practices in directory setup, class generation, and Composer integration. It emphasizes:
+## Introduction
+NikoGin is a command-line tool that automates the creation of a structured, modern WordPress plugin. It sets up a professional foundation with an emphasis on best practices, saving you hours of boilerplate work.
 
-- Dependency injection
-- Service provider management
-- Autoloading via Composer
-- CLI-based plugin creation
+-   **Modern PHP:** Built with dependency injection and service providers.
+-   **Autoloading:** Uses Composer for a clean, autoloaded class structure.
+-   **Powerful CLI:** A robust command-line interface for generating plugins and their components.
 
-##  Features
--  Generates a complete WordPress plugin structure.
--  Includes service providers for dependency management.
--  Uses Composer for autoloading.
-- 🖥 Provides a CLI command to create a new plugin.
+## Features
+-   Generates a complete WordPress plugin structure from a single command.
+-   Includes commands for scaffolding controllers, cron events, migrations, providers, listeners, repositories, and shortcodes.
+-   Enforces a clean architecture with a pre-configured service container.
+-   Uses Composer for autoloading and dependency management.
 
-##  Installation
-To install this package via Composer, run:
+---
+
+## Installation
+
+NikoGin is a global CLI tool. You install it once on your system and can use it anywhere to create new plugins.
+
+### 1. Requirements
+
+Before you install, ensure your system is set up for modern PHP development.
+-   **PHP >= 8.2**
+-   **Composer**
+-   The following PHP extensions must be installed and enabled:
+   -   `intl` (Required by Symfony dependencies for string normalization)
+   -   `mbstring` (Required by Symfony dependencies for multi-byte string handling)
+   -   `curl` (Required by Composer for downloading packages)
+   -   `xml` (Required by Composer and many PHP packages)
+   -   `zip` (Required by Composer for extracting packages)
+
+> **For Debian/Ubuntu/Pop!_OS users:**
+> If you need to set up a new PHP environment, you can use the `ppa:ondrej/php` repository.
+> ```sh
+> # Add the trusted PHP repository
+> sudo add-apt-repository ppa:ondrej/php
+> 
+> sudo apt update
+> 
+> # Install PHP and all required extensions
+> sudo apt install php8.2-cli php8.2-intl php8.2-mbstring php8.2-xml php8.2-curl php8.2-zip
+> ```
+
+### 2. Global Installation
+Since NikoGin is not yet on the public Packagist repository, you must install it directly from its private GitHub repository.
+
+#### 2.1. Configure Composer
+First, tell your global Composer installation where to find the package. This requires an SSH key configured with your GitHub account.
+
 ```sh
-composer require nikogin/plugin-generator
+composer global config repositories.nikogin vcs git@github.com:NikolaD01/NikoGin.git
+````
+
+#### 2.2. Install the package
+Now, run the require command using the specific branch you want to install. The dev- prefix is required.
+```sh
+# You can replace "main" with the branch you want to install (Keep in mind that "main" is the current stable branch.), e.g., "dev-feature/alpha-feature"
+composer global require nikolad/nikogin:"dev-main"
 ```
----
-### Notice !!!
-Since **NikoGin** is still in development some things still needs to be polished,
-for current use its best to install **NikoGin** inside **wp-content/plugins** folder and add to **.gitignore**,
-when I manage to put it to composer, It will be moved as global package.
 
-Important thing now is also that most bootstrap inside plugin will be needed to be done manually what does that mean ?
-For example when you create multiple **Providers** you will need to manually add them to providers in **ProviderManager** inside **Core** of framework.
+Note: If this is your first time interacting with private GitHub repositories via Composer, you may be prompted to create and provide a Personal Access Token. If it is this first time doing this refer to the [Official GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
 
-In future all of this will be covered for now just keep in mind that some things need manual setup. 
-Enjoy programing :) 
----
+### 3. Update your system's PATH
+To run the nikogin command directly, you must add Composer's global bin directory to your system's PATH.
+
+#### 3.1. Find the exact path to the directory by running:
+
+```sh
+composer global config bin-dir --absolute
+````
+#### 3.2. Add this path to your shell's startup file (e.g., .zshrc, .bashrc, or .profile).
+```sh
+export PATH="$(composer global config bin-dir --absolute):$PATH"
+```
+
+#### 3.3. After adding the previously mentioned path to your shell's startup you need to launch a new terminal instance so the change takes effect.
+#### Alternately you can run the following command so you see the changes immediately in the same terminal instance:
+**NOTE**: If you are using a different shell (zshell, sh etc.) source the startup file that matches the shell you are using.
+
+```sh
+source ~/.bashrc
+```
+
+### 4. Verify the installation
+After completing the above steps, verify that the installation was successful by running the following command in your terminal:
+
+```sh
+nikogin --version
+```
+
+### 5. Keeping NikoGin updated
+Since the project is still in the development phase and there are frequent changes,
+you will need to pull the latest changes and bug fixes periodically. You can easily do this
+by running Composer's global `update` command:
+
+```sh
+composer global update nikolad/nikogin
+```
 
 ##  Usage
 ### Create a New Plugin
 Run the following command to generate a new WordPress plugin:
 ```sh
-php nikogin create <PluginName> <PluginPrefix>
+nikogin create <PluginName> <PluginPrefix> <PathToWordpressRoot>
 ```
+Note: if no path is provided it will default to current working directory.
 
 ### Example:
 ```sh
-php nikogin create MyPlugin MyPluginPrefix
+nikogin create 'My First PopArt plugin' PA '~/PhpStormProjects/project123'
 ```
+
+Note: NikoGin uses kebab-case for the name of the root plugin directory, so in our case
+'My First PopArt plugin' will be created in my-first-popart-plugin directory.
 
 ### Description:
 -  Creates a structured directory for the plugin.
@@ -56,7 +127,7 @@ php nikogin create MyPlugin MyPluginPrefix
 ### Create a Controller
 
 ```sh
-php nikogin make:controller <Name> <Type> <Dir> 
+nikogin make:controller <Name> <Type> <Dir> 
 ```
 
 Available Types:
@@ -70,15 +141,15 @@ There are three options for the `<Type>` argument:
 ### Examples
 #### 1. Example for Rest Controller directly from wp-content
 ```sh
-php nikogin make:controller ExampleRestController rest example-plugin
+nikogin make:controller ExampleRestController rest example-plugin
 ```
 #### 2. Example for Menu Controller from root of project
 ```sh
-php nikogin make:controller ExampleMenuController menu wp-content/example-plugin
+nikogin make:controller ExampleMenuController menu wp-content/example-plugin
 ```
 #### 3. Example for Submenu Controller 
 ```sh
-php nikogin make:controller ExampleSubmenuController submenu example-plugin
+nikogin make:controller ExampleSubmenuController submenu example-plugin
 ```
 ### Description:
 -  Creates a directory for Controller type if it's not created already.
@@ -88,12 +159,12 @@ php nikogin make:controller ExampleSubmenuController submenu example-plugin
 ### Create a Migration
 
 ```sh
-php nikogin make:migration <Name> <Dir> 
+nikogin make:migration <Name> <Dir> 
 ```
 
 ### Example 
 ```sh
-php nikogin make:migration Example example-plugin 
+nikogin make:migration Example example-plugin 
 ```
 
 ### Description:
@@ -104,13 +175,13 @@ php nikogin make:migration Example example-plugin
 ### Create a Provider 
 
 ```sh
-php nikogin make:provider <Name> <Dir>
+nikogin make:provider <Name> <Dir>
 ```
 
 ### Example
 
 ```sh
-php nikogin make:provider Example example-plugin
+nikogin make:provider Example example-plugin
 ```
 
 ### Description:
@@ -123,13 +194,13 @@ php nikogin make:provider Example example-plugin
 ### Create a Listener
 
 ```sh
-php nikogin make:listener <Name> <Listener> <Dir> optional <Type> <Args> <Priorty>
+nikogin make:listener <Name> <Listener> <Dir> optional <Type> <Args> <Priorty>
 ```
 
 ### Example 
 
 ```sh
-php nikogin make:listener PostSave save_post example action --args=2 --priority=10
+nikogin make:listener PostSave save_post example action --args=2 --priority=10
 ```
 
 ### Description:
@@ -143,13 +214,13 @@ php nikogin make:listener PostSave save_post example action --args=2 --priority=
 ### Create a Cron
 
 ```sh
-php nikogin make:cron <Name> <Dir>
+nikogin make:cron <Name> <Dir>
 ```
 
 ### Example
 
 ```sh
-php nikogin make:cron ExampleCron exampledir
+nikogin make:cron ExampleCron exampledir
 ```
 
 ### Description:
@@ -161,12 +232,12 @@ php nikogin make:cron ExampleCron exampledir
 ### Create a Repository
 
 ```sh
-php nikogin make:repository <Name> <Table> <Dir>
+nikogin make:repository <Name> <Table> <Dir>
 ```
 
 ### Example
 ```sh
-php nikogin make:repository ExampleName example_table example/
+nikogin make:repository ExampleName example_table example/
 ```
 
 ### Description: 
@@ -178,12 +249,12 @@ php nikogin make:repository ExampleName example_table example/
 ### Create a Shortcode
 
 ```sh
-php nikogin make:shortcode <Name> <Action> <Dir>
+nikogin make:shortcode <Name> <Action> <Dir>
 ```
 
 ### Example
 ```sh
-php nikogin make:shortcode ExampleName example_action example/
+nikogin make:shortcode ExampleName example_action example/
 ```
 
 ### Description:
@@ -194,10 +265,10 @@ php nikogin make:shortcode ExampleName example_action example/
 ## Incoming
 This is list of incoming features and commands : \
 **BE** 
-- Jobs (Depending on WooCommerce Action Scheduler (subject to change), wordpress background processes)
+- Jobs (Depending on WooCommerce Action Scheduler (subject to change), WordPress background processes)
 - Middlewares (Package inside core with already done middlewares also ability to make new ones, this is for REST routing security)
 - Controller (Rest Controller)
-- Wordpress component extension (Ability to easy extend any wordpress component as WpTable ) (Subject to change)
+- WordPress component extension (Ability to easily extend any WordPress component as WpTable ) (Subject to change)
 - Commands (Extend WP CLI, create commands)
 - Seeders
 - Support Elements ( as Symfony d/dd etc ... ) 
@@ -217,4 +288,4 @@ This project is licensed under the MIT License.
 
 ---
  **Stay Updated:** Follow updates and improvements to the package. Happy coding! 
-
+ 

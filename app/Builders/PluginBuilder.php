@@ -15,28 +15,25 @@ class PluginBuilder
     )
     {}
 
-    public function create(string $pluginName, string $pluginPrefix): string
+    public function create(string $pluginName, string $pluginPrefix, string $pluginDir, string $directorySlug): void
     {
-
-        $pluginDir = __DIR__ . '/../../../' . strtolower($pluginName);
 
         if (!mkdir($pluginDir, 0755, true) && !is_dir($pluginDir)) {
             throw new \RuntimeException('Failed to create plugin directory.');
         }
-        $composerJson = $this->baseLogicGenerator->generateComposerJson($pluginName, $pluginPrefix);
+        $composerJson = $this->baseLogicGenerator->generateComposerJson($directorySlug, $pluginPrefix);
         file_put_contents($pluginDir . '/composer.json', json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        $this->createStructure($pluginDir, $pluginPrefix, $pluginName);
+        $this->createStructure($pluginDir, $pluginPrefix, $pluginName, $directorySlug);
 
-        return $pluginDir;
     }
 
-    private function createStructure(string $pluginDir, string $pluginPrefix, string $pluginName): void
+    private function createStructure(string $pluginDir, string $pluginPrefix, string $pluginName, string $directorySlug): void
     {
         $directories = $this->directoryService->createDirectories($pluginDir);
 
         $files = [
-            $pluginDir . "/" . strtolower($pluginName) . ".php"      => $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName),
+            $pluginDir . "/" . $directorySlug . ".php"               => $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName),
             $directories['app'] . '/Plugin.php'                      => $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName),
             $directories['foundation'] . '/ProviderManager.php'      => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
             $directories['foundation'] . '/ServiceProvider.php'      => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),

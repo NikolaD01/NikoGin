@@ -8,7 +8,8 @@ class BaseLogicGenerator
     public function generateMainFileLogic(string $pluginPrefix, string $pluginName): string
     {
         // Generate the constant names
-        $constantName = strtoupper($pluginName);
+        //Note: Also could be replaced with symfony/string package method
+        $constantName = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName)));
         $constantFile = "{$constantName}_FILE";
         $constantDir = "{$constantName}_DIR";
         $constantUrl = "{$constantName}_URL";
@@ -24,7 +25,7 @@ class BaseLogicGenerator
     }
     public function generatePluginLogic(string $pluginPrefix, string $pluginName): string
     {
-        $constantDefinition = strtoupper($pluginName) . '_FILE';
+        $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
         return "<?php\n\nnamespace {$pluginPrefix};\n\nuse Exception;\nuse {$pluginPrefix}\\Core\\Managers\\ServiceProviderManager;\n\nclass Plugin\n{\n    /**\n     * @throws Exception\n     */\n    public function __construct()\n    {\n        \$this->registerHooks();\n    }\n\n    private function registerHooks(): void {\n        register_activation_hook( {$constantDefinition}, [ \$this, 'activate' ] );\n        register_deactivation_hook( {$constantDefinition}, [ \$this, 'deactivate' ] );\n        register_uninstall_hook( {$constantDefinition}, [ __CLASS__, 'uninstall' ] );\n    }\n\n    public function activate(): void\n    {\n        ServiceProviderManager::getInstance()->register();\n        flush_rewrite_rules();\n    }\n\n    public function deactivate(): void\n    {\n        flush_rewrite_rules();\n    }\n\n    public static function uninstall(): void\n    {\n        // Uninstall logic here\n    }\n}";
     }
@@ -193,10 +194,10 @@ abstract class Shortcode
          */\n    public static function setNamespace(string \$namespace): void\n    {\n        self::\$namespace = \$namespace;\n    }\n}";
     }
 
-    public function generateComposerJson(string $pluginName, string $pluginPrefix): array
+    public function generateComposerJson(string $directoryName, string $pluginPrefix): array
     {
         return [
-            'name' => strtolower($pluginPrefix . '/' . $pluginName),
+            'name' => strtolower($pluginPrefix . '/' . $directoryName),
             'description' => 'A new WordPress plugin',
             'type' => 'project',
             'license' => 'MIT',
