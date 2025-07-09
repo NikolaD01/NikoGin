@@ -68,6 +68,17 @@ class BaseLogicGenerator
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Managers;\n\nuse {$pluginPrefix}\\Core\\Foundation\\ProviderManager;\nuse {$pluginPrefix}\\Core\\Support\\Traits\\IsSingleton;\n\nclass ServiceProviderManager extends ProviderManager\n{\n    use IsSingleton;\n\n    protected array \$providers = [];\n}";
     }
 
+    public function generateWebRouterLogic(string $pluginPrefix): string
+    {
+        // TODO: think what to do here
+        return "<?php";
+    }
+
+    public function generateApiRouterLogic(string $pluginPrefix): string
+    {
+        return "<?php\n\nuse {$pluginPrefix}\\Core\\Support\\Container;\n\nuse {$pluginPrefix}\\Core\\Support\\Router;";
+    }
+
     public function generateListenerManagerLogic(string $pluginPrefix): string
     {
         return "<?php

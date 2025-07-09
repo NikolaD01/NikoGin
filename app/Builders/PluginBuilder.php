@@ -52,6 +52,8 @@ class PluginBuilder
             $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
             $directories['attributes'] . '/AsListener.php'           => $this->baseLogicGenerator->generateAsListenerLogic($pluginPrefix),
             $directories['contracts'] . '/CronInterface.php'         => $this->contractsLogicGenerator->generateCronInterface($pluginPrefix),
+            $directories['routes'] . '/web.php'                      => $this->baseLogicGenerator->generateWebRouterLogic($pluginPrefix),
+            $directories['routes'] . '/api.php'                      => $this->baseLogicGenerator->generateApiRouterLogic($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {
