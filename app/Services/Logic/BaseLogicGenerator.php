@@ -27,8 +27,55 @@ class BaseLogicGenerator
     {
         $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
-        return "<?php\n\nnamespace {$pluginPrefix};\n\nuse Exception;\nuse {$pluginPrefix}\\Core\\Managers\\ServiceProviderManager;\n\nclass Plugin\n{\n    /**\n     * @throws Exception\n     */\n    public function __construct()\n    {\n        \$this->registerHooks();\n    }\n\n    private function registerHooks(): void {\n        register_activation_hook( {$constantDefinition}, [ \$this, 'activate' ] );\n        register_deactivation_hook( {$constantDefinition}, [ \$this, 'deactivate' ] );\n        register_uninstall_hook( {$constantDefinition}, [ __CLASS__, 'uninstall' ] );\n    }\n\n    public function activate(): void\n    {\n        ServiceProviderManager::getInstance()->register();\n        flush_rewrite_rules();\n    }\n\n    public function deactivate(): void\n    {\n        flush_rewrite_rules();\n    }\n\n    public static function uninstall(): void\n    {\n        // Uninstall logic here\n    }\n}";
+        return "<?php
+
+namespace {$pluginPrefix};
+
+use Exception;
+use {$pluginPrefix}\\Core\\Managers\\ServiceProviderManager;
+
+class Plugin
+{
+    /**
+     * @throws Exception
+     */
+    public function __construct()
+    {
+        \$this->registerHooks();
+        add_action('plugins_loaded', [\$this, 'load']);
     }
+
+    private function registerHooks(): void
+    {
+        register_activation_hook({$constantDefinition}, [\$this, 'activate']);
+        register_deactivation_hook({$constantDefinition}, [\$this, 'deactivate']);
+        register_uninstall_hook({$constantDefinition}, [__CLASS__, 'uninstall']);
+    }
+
+    public function activate(): void
+    {
+        ServiceProviderManager::getInstance()->register();
+        flush_rewrite_rules();
+    }
+
+    public function deactivate(): void
+    {
+        flush_rewrite_rules();
+    }
+
+    public static function uninstall(): void
+    {
+        // Uninstall logic here
+    }
+
+    public function load(): void
+    {
+        ServiceProviderManager::getInstance()->register();
+    }
+}
+";
+    }
+
     public function generateProviderManagerLogic(string $pluginPrefix): string
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class ProviderManager\n{\n    protected array \$providers = [];\n\n    public function register(): void\n    {\n        foreach (\$this->providers as \$providerClass) {\n            \$provider = new \$providerClass();\n            \$provider->register();\n        }\n    }\n}";
