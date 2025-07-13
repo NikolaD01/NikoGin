@@ -188,7 +188,7 @@ abstract class Shortcode
     {
         $apiNamespace = strtolower($pluginPrefix) . "/v1";
 
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Routing;\n\nclass Router\n{\n    private static string \$namespace = '{$apiNamespace}';\n\n    /**
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support;\n\nclass Router\n{\n    private static string \$namespace = '{$apiNamespace}';\n\n    /**
          * Register a REST route.
          *
          * @param string \$route The route path.

@@ -13,6 +13,10 @@ class DirectoryService
         mkdir($appDir, 0755);
         $this->directories['app'] = $appDir;
 
+        $routesDir = $pluginDir . '/routes';
+        mkdir($routesDir, 0755);
+        $this->directories['routes'] = $routesDir;
+
         // Create Core directory
         $coreDir = $appDir . '/Core';
         mkdir($coreDir, 0755);
