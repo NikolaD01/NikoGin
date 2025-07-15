@@ -21,9 +21,9 @@ class BaseLogicGenerator
  * Author: Your Name
  * Author URI: https://yourwebsite.com
  * License: MIT
- */\n\n// Define constants\nif ( ! defined( '{$constantFile}' ) ) {\n    define( '{$constantFile}', __FILE__ );\n}\n\nif ( ! defined( '{$constantDir}' ) ) {\n    define( '{$constantDir}', plugin_dir_path( __FILE__ ) );\n}\n\nif ( ! defined( '{$constantUrl}' ) ) {\n    define( '{$constantUrl}', plugin_dir_url( __FILE__ ) );\n}\n\n// Load the Composer autoloader\nrequire_once __DIR__ . '/vendor/autoload.php';\n\n// Instantiate the Plugin class\nuse {$pluginPrefix}\\Plugin;\nnew Plugin();";
+ */\n\n// Define constants\nif ( ! defined( '{$constantFile}' ) ) {\n    define( '{$constantFile}', __FILE__ );\n}\n\nif ( ! defined( '{$constantDir}' ) ) {\n    define( '{$constantDir}', plugin_dir_path( __FILE__ ) );\n}\n\nif ( ! defined( '{$constantUrl}' ) ) {\n    define( '{$constantUrl}', plugin_dir_url( __FILE__ ) );\n}\n\n// Load the Composer autoloader\nrequire_once __DIR__ . '/vendor/autoload.php';\n\n// Instantiate the Plugin class\nuse {$pluginPrefix}\\Bootstrap;\nBootstrap::init();";
     }
-    public function generatePluginLogic(string $pluginPrefix, string $pluginName): string
+    public function generateBootstrapLogic(string $pluginPrefix, string $pluginName): string
     {
         $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
@@ -31,47 +31,36 @@ class BaseLogicGenerator
 
 namespace {$pluginPrefix};
 
-use Exception;
-use {$pluginPrefix}\\Core\\Managers\\ServiceProviderManager;
+use {$pluginPrefix}\\Core\\Bootstrap\\Activator;
+use {$pluginPrefix}\\Core\\Bootstrap\\Deactivator;
+use {$pluginPrefix}\\Core\\Bootstrap\\Loader;
+use {$pluginPrefix}\\Core\\Bootstrap\\Uninstaller;
 
-class Plugin
+class Bootstrap
 {
+    /** @var class-string[] */
+    private static array \$bootstraps = [
+        Activator::class,
+        Deactivator::class,
+        Loader::class,
+        Uninstaller::class,
+    ];
+
     /**
-     * @throws Exception
+     * Kick off all bootstrap components.
      */
-    public function __construct()
+    public static function init(): void
     {
-        \$this->registerHooks();
-        add_action('plugins_loaded', [\$this, 'load']);
+        if (! defined(self::PLUGIN_FILE)) {
+            define(self::PLUGIN_FILE, __FILE__);
+        }
+
+        foreach (self::\$bootstraps as \$bootClass) {
+            \$bootClass::boot();
+        }
     }
 
-    private function registerHooks(): void
-    {
-        register_activation_hook({$constantDefinition}, [\$this, 'activate']);
-        register_deactivation_hook({$constantDefinition}, [\$this, 'deactivate']);
-        register_uninstall_hook({$constantDefinition}, [__CLASS__, 'uninstall']);
-    }
-
-    public function activate(): void
-    {
-        ServiceProviderManager::getInstance()->register();
-        flush_rewrite_rules();
-    }
-
-    public function deactivate(): void
-    {
-        flush_rewrite_rules();
-    }
-
-    public static function uninstall(): void
-    {
-        // Uninstall logic here
-    }
-
-    public function load(): void
-    {
-        ServiceProviderManager::getInstance()->register();
-    }
+    private const PLUGIN_FILE = '{$constantDefinition}';
 }
 ";
     }
