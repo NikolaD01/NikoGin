@@ -41,6 +41,7 @@ class PluginBuilder
             $directories['bootstrap'] . '/Loader.php'                => $this->bootLogicGenerator->generateLoader($pluginPrefix),
             $directories['bootstrap'] . '/Deactivator.php'           => $this->bootLogicGenerator->generateDeactivator($pluginPrefix, $pluginName),
             $directories['bootstrap'] . '/Uninstaller.php'           => $this->bootLogicGenerator->generateUninstaller($pluginPrefix, $pluginName),
+            $directories['bootstrap'] . '/RoutesRegistrar.php'       => $this->bootLogicGenerator->generateRoutesRegistrar($pluginPrefix, $pluginName),
             $directories['app'] . '/Bootstrap.php'                   => $this->baseLogicGenerator->generateBootstrapLogic($pluginPrefix, $pluginName),
             $directories['foundation'] . '/ProviderManager.php'      => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
             $directories['foundation'] . '/ServiceProvider.php'      => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),

@@ -147,4 +147,42 @@ class Uninstaller implements Bootable
 }
 PHP;
     }
+
+    public function generateRoutesRegistrar(string $pluginPrefix, string $pluginName): string
+    {
+        $dirConstant = strtoupper(
+                str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))
+            ) . '_DIR';
+
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\\Core\\Bootstrap;
+
+use {$pluginPrefix}\\Core\\Contracts\\Bootable;
+
+class RoutesRegistrar implements Bootable
+{
+    /**
+     * Hook into the REST API initialization.
+     */
+    public static function boot(): void
+    {
+        add_action('rest_api_init', [self::class, 'run']);
+    }
+
+    /**
+     * Require every PHP file in app/routes/.
+     */
+    public static function run(): void
+    {
+        foreach (glob(self::PLUGIN_DIR . '/app/routes/*.php') as \$route_file) {
+            require_once \$route_file;
+        }
+    }
+
+    private const PLUGIN_DIR = {$dirConstant};
+}
+PHP;
+    }
 }

@@ -15,7 +15,7 @@ class DirectoryService
 
 
 
-        $routesDir = $pluginDir . '/routes';
+        $routesDir = $appDir . '/routes';
         mkdir($routesDir, 0755);
         $this->directories['routes'] = $routesDir;
 
