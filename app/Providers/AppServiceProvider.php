@@ -20,6 +20,7 @@ use NikoGin\Command\CreateRepositoryCommand;
 use NikoGin\Command\CreateShortcodeCommand;
 use NikoGin\Core\Foundation\ServiceProvider;
 use NikoGin\Services\Logic\BaseLogicGenerator;
+use NikoGin\Services\Logic\BootLogicGenerator;
 use NikoGin\Services\Logic\ContractsLogicGenerator;
 use NikoGin\Services\Logic\ControllerLogicGenerator;
 use NikoGin\Services\Logic\CronLogicGenerator;
@@ -36,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         DirectoryService::class,
 
         BaseLogicGenerator::class,
+        BootLogicGenerator::class,
         ControllerLogicGenerator::class,
         MigrationLogicGenerator::class,
         ProviderLogicGenerator::class,
@@ -48,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
         ProviderBuilder::class   => [ProviderLogicGenerator::class],
         MigrationBuilder::class  => [MigrationLogicGenerator::class],
         ControllerBuilder::class => [DirectoryService::class, ControllerLogicGenerator::class],
-        PluginBuilder::class     => [BaseLogicGenerator::class, DirectoryService::class, ContractsLogicGenerator::class],
+        PluginBuilder::class     => [BaseLogicGenerator::class, DirectoryService::class, ContractsLogicGenerator::class, BootLogicGenerator::class],
         ListenerBuilder::class   => [ListenerLogicGenerator::class, DirectoryService::class],
         CronBuilder::class => [CronLogicGenerator::class],
         RepositoryBuilder::class => [DirectoryService::class,RepositoryLogicGenerator::class],

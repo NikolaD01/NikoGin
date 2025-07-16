@@ -5,6 +5,7 @@ namespace NikoGin\Builders;
 use NikoGin\Services\Logic\BaseLogicGenerator;
 use NikoGin\Services\Logic\ContractsLogicGenerator;
 use NikoGin\Services\Structure\DirectoryService;
+use NikoGin\Services\Logic\BootLogicGenerator;
 
 class PluginBuilder
 {
@@ -12,6 +13,7 @@ class PluginBuilder
         private readonly BaseLogicGenerator $baseLogicGenerator,
         private readonly DirectoryService $directoryService,
         private readonly ContractsLogicGenerator $contractsLogicGenerator,
+        private readonly BootLogicGenerator $bootLogicGenerator,
     )
     {}
 
@@ -34,7 +36,13 @@ class PluginBuilder
 
         $files = [
             $pluginDir . "/" . $directorySlug . ".php"               => $this->baseLogicGenerator->generateMainFileLogic($pluginPrefix, $pluginName),
-            $directories['app'] . '/Plugin.php'                      => $this->baseLogicGenerator->generatePluginLogic($pluginPrefix, $pluginName),
+            $directories['contracts'] . '/Bootable.php'              => $this->contractsLogicGenerator->generateBootable($pluginPrefix),
+            $directories['bootstrap'] . '/Activator.php'             => $this->bootLogicGenerator->generateActivator($pluginPrefix, $pluginName),
+            $directories['bootstrap'] . '/Loader.php'                => $this->bootLogicGenerator->generateLoader($pluginPrefix),
+            $directories['bootstrap'] . '/Deactivator.php'           => $this->bootLogicGenerator->generateDeactivator($pluginPrefix, $pluginName),
+            $directories['bootstrap'] . '/Uninstaller.php'           => $this->bootLogicGenerator->generateUninstaller($pluginPrefix, $pluginName),
+            $directories['bootstrap'] . '/RoutesRegistrar.php'       => $this->bootLogicGenerator->generateRoutesRegistrar($pluginPrefix, $pluginName),
+            $directories['app'] . '/Bootstrap.php'                   => $this->baseLogicGenerator->generateBootstrapLogic($pluginPrefix, $pluginName),
             $directories['foundation'] . '/ProviderManager.php'      => $this->baseLogicGenerator->generateProviderManagerLogic($pluginPrefix),
             $directories['foundation'] . '/ServiceProvider.php'      => $this->baseLogicGenerator->generateServiceProviderLogic($pluginPrefix),
             $directories['foundation'] . '/DashboardController.php'  => $this->baseLogicGenerator->generateDashboardControllerLogic($pluginPrefix),
@@ -52,6 +60,8 @@ class PluginBuilder
             $directories['support'] . '/Router.php'                  => $this->baseLogicGenerator->generateRouterLogic($pluginPrefix),
             $directories['attributes'] . '/AsListener.php'           => $this->baseLogicGenerator->generateAsListenerLogic($pluginPrefix),
             $directories['contracts'] . '/CronInterface.php'         => $this->contractsLogicGenerator->generateCronInterface($pluginPrefix),
+            $directories['routes'] . '/web.php'                      => $this->baseLogicGenerator->generateWebRouterLogic($pluginPrefix),
+            $directories['routes'] . '/api.php'                      => $this->baseLogicGenerator->generateApiRouterLogic($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {

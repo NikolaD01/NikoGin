@@ -21,14 +21,51 @@ class BaseLogicGenerator
  * Author: Your Name
  * Author URI: https://yourwebsite.com
  * License: MIT
- */\n\n// Define constants\nif ( ! defined( '{$constantFile}' ) ) {\n    define( '{$constantFile}', __FILE__ );\n}\n\nif ( ! defined( '{$constantDir}' ) ) {\n    define( '{$constantDir}', plugin_dir_path( __FILE__ ) );\n}\n\nif ( ! defined( '{$constantUrl}' ) ) {\n    define( '{$constantUrl}', plugin_dir_url( __FILE__ ) );\n}\n\n// Load the Composer autoloader\nrequire_once __DIR__ . '/vendor/autoload.php';\n\n// Instantiate the Plugin class\nuse {$pluginPrefix}\\Plugin;\nnew Plugin();";
+ */\n\n// Define constants\nif ( ! defined( '{$constantFile}' ) ) {\n    define( '{$constantFile}', __FILE__ );\n}\n\nif ( ! defined( '{$constantDir}' ) ) {\n    define( '{$constantDir}', plugin_dir_path( __FILE__ ) );\n}\n\nif ( ! defined( '{$constantUrl}' ) ) {\n    define( '{$constantUrl}', plugin_dir_url( __FILE__ ) );\n}\n\n// Load the Composer autoloader\nrequire_once __DIR__ . '/vendor/autoload.php';\n\n// Instantiate the Plugin class\nuse {$pluginPrefix}\\Bootstrap;\nBootstrap::init();";
     }
-    public function generatePluginLogic(string $pluginPrefix, string $pluginName): string
+    public function generateBootstrapLogic(string $pluginPrefix, string $pluginName): string
     {
         $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
-        return "<?php\n\nnamespace {$pluginPrefix};\n\nuse Exception;\nuse {$pluginPrefix}\\Core\\Managers\\ServiceProviderManager;\n\nclass Plugin\n{\n    /**\n     * @throws Exception\n     */\n    public function __construct()\n    {\n        \$this->registerHooks();\n    }\n\n    private function registerHooks(): void {\n        register_activation_hook( {$constantDefinition}, [ \$this, 'activate' ] );\n        register_deactivation_hook( {$constantDefinition}, [ \$this, 'deactivate' ] );\n        register_uninstall_hook( {$constantDefinition}, [ __CLASS__, 'uninstall' ] );\n    }\n\n    public function activate(): void\n    {\n        ServiceProviderManager::getInstance()->register();\n        flush_rewrite_rules();\n    }\n\n    public function deactivate(): void\n    {\n        flush_rewrite_rules();\n    }\n\n    public static function uninstall(): void\n    {\n        // Uninstall logic here\n    }\n}";
+        return "<?php
+
+namespace {$pluginPrefix};
+
+use {$pluginPrefix}\\Core\\Bootstrap\\Activator;
+use {$pluginPrefix}\\Core\\Bootstrap\\Deactivator;
+use {$pluginPrefix}\\Core\\Bootstrap\\Loader;
+use {$pluginPrefix}\\Core\\Bootstrap\\Uninstaller;
+use {$pluginPrefix}\\Core\\Bootstrap\\RoutesRegistrar;
+class Bootstrap
+{
+    /** @var class-string[] */
+    private static array \$bootstraps = [
+        Activator::class,
+        Deactivator::class,
+        Loader::class,
+        Uninstaller::class,
+        RoutesRegistrar::class,
+    ];
+
+    /**
+     * Kick off all bootstrap components.
+     */
+    public static function init(): void
+    {
+        if (! defined(self::PLUGIN_FILE)) {
+            define(self::PLUGIN_FILE, __FILE__);
+        }
+
+        foreach (self::\$bootstraps as \$bootClass) {
+            \$bootClass::boot();
+        }
     }
+
+    private const PLUGIN_FILE = '{$constantDefinition}';
+}
+";
+    }
+
     public function generateProviderManagerLogic(string $pluginPrefix): string
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class ProviderManager\n{\n    protected array \$providers = [];\n\n    public function register(): void\n    {\n        foreach (\$this->providers as \$providerClass) {\n            \$provider = new \$providerClass();\n            \$provider->register();\n        }\n    }\n}";
@@ -66,6 +103,17 @@ class BaseLogicGenerator
     public function generateServiceProviderManagerLogic(string $pluginPrefix): string
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Managers;\n\nuse {$pluginPrefix}\\Core\\Foundation\\ProviderManager;\nuse {$pluginPrefix}\\Core\\Support\\Traits\\IsSingleton;\n\nclass ServiceProviderManager extends ProviderManager\n{\n    use IsSingleton;\n\n    protected array \$providers = [];\n}";
+    }
+
+    public function generateWebRouterLogic(string $pluginPrefix): string
+    {
+        // TODO: think what to do here
+        return "<?php";
+    }
+
+    public function generateApiRouterLogic(string $pluginPrefix): string
+    {
+        return "<?php\n\nuse {$pluginPrefix}\\Core\\Support\\Container;\n\nuse {$pluginPrefix}\\Core\\Support\\Router;";
     }
 
     public function generateListenerManagerLogic(string $pluginPrefix): string
@@ -177,7 +225,7 @@ abstract class Shortcode
     {
         $apiNamespace = strtolower($pluginPrefix) . "/v1";
 
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Routing;\n\nclass Router\n{\n    private static string \$namespace = '{$apiNamespace}';\n\n    /**
+        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support;\n\nclass Router\n{\n    private static string \$namespace = '{$apiNamespace}';\n\n    /**
          * Register a REST route.
          *
          * @param string \$route The route path.

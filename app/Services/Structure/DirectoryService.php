@@ -13,11 +13,20 @@ class DirectoryService
         mkdir($appDir, 0755);
         $this->directories['app'] = $appDir;
 
+
+
+        $routesDir = $appDir . '/routes';
+        mkdir($routesDir, 0755);
+        $this->directories['routes'] = $routesDir;
+
         // Create Core directory
         $coreDir = $appDir . '/Core';
         mkdir($coreDir, 0755);
         $this->directories['core'] = $coreDir;
 
+        $bootstrap = $coreDir . '/Bootstrap';
+        mkdir($bootstrap, 0755);
+        $this->directories['bootstrap'] = $bootstrap;
         // Create Foundation directory
         $foundationDir = $coreDir . '/Foundation';
         mkdir($foundationDir, 0755);

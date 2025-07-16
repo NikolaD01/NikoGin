@@ -267,17 +267,26 @@ This is list of incoming features and commands : \
 **BE** 
 - Jobs (Depending on WooCommerce Action Scheduler (subject to change), WordPress background processes)
 - Middlewares (Package inside core with already done middlewares also ability to make new ones, this is for REST routing security)
-- Controller (Rest Controller)
 - WordPress component extension (Ability to easily extend any WordPress component as WpTable ) (Subject to change)
 - Commands (Extend WP CLI, create commands)
 - Seeders
 - Support Elements ( as Symfony d/dd etc ... ) 
-- API Foundation Support \
+- API Foundation Support 
+- Routes Model/PostType binding (Idea here is to bind Post Object if we provide route with /product/{id} , id would return Post object)
+- Router expanding (To create Laravel like Router class methods, (groups, resources, middleware ... )) \
 **FE** \
 Idea here is when we want to create new plugin, we can have starter kits or none.
 With starter kits we can choose how we will make dashboards and what would be used as bundler.
 For example goal is that user can choose react, twig or base php , so for react we can use wp-scripts,
-for twig or php we can use vite with typescript , and at end user can choose vanilla js without bundlers 
+for twig or php we can use vite with typescript , and at end user can choose vanilla js without bundlers \
+**Exclude** \
+When creating plugin idea is to prompt user with yes/no if user want to exclude some foundation.
+Example user is creating Plugin for Rest routes where he will just handle data from request, for this theoretically,
+classes like Controller, Repository , Cron, Jobs can handle task which leave space to remove rest of unused classes and to make Core simpler.
+We can add option parameter in create command like this 
+```sh
+nikogin create --exclude 
+```
 ---
 
 ## Contributing
