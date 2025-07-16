@@ -4,7 +4,7 @@ namespace NikoGin\Services\Logic;
 
 class CronLogicGenerator
 {
-    public function generate(string $name, string $pluginPrefix, string $cronDir): void
+    public static function generate(string $name, string $pluginPrefix, string $cronDir): void
     {
         $filePath = "$cronDir/$name.php";
 
@@ -14,12 +14,12 @@ class CronLogicGenerator
         }
 
         if (!file_exists($filePath)) {
-            $content = $this->generateCronClass($name, $pluginPrefix);
+            $content = self::generateCronClass($name, $pluginPrefix);
             file_put_contents($filePath, $content);
         }
     }
 
-    public function generateProvider(string $name, string $pluginPrefix, string $providerDir): void
+    public static function generateProvider(string $name, string $pluginPrefix, string $providerDir): void
     {
         $filePath = "$providerDir/CronProvider.php";
         // Ensure the directory exists
@@ -28,7 +28,7 @@ class CronLogicGenerator
         }
 
         if (!file_exists($filePath)) {
-            $content = $this->generateCronProviderClass($name, $pluginPrefix);
+            $content = self::generateCronProviderClass($name, $pluginPrefix);
         } else {
             $cronNamespace = "{$pluginPrefix}\\Http\\Crons\\$name";
             $content = file_get_contents($filePath);
@@ -60,7 +60,7 @@ class CronLogicGenerator
         file_put_contents($filePath, $content);
     }
 
-    private function generateCronClass(string $name, string $pluginPrefix): string
+    private static function generateCronClass(string $name, string $pluginPrefix): string
     {
 
         $lowerPluginPrefix = strtolower($pluginPrefix);
@@ -96,7 +96,7 @@ class {$name} implements CronInterface
 }";
     }
 
-    private function generateCronProviderClass(string $name, string $pluginPrefix): string
+    private static function generateCronProviderClass(string $name, string $pluginPrefix): string
     {
         return "<?php
 

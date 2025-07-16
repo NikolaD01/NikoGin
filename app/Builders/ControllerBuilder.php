@@ -8,7 +8,7 @@ use NikoGin\Services\Structure\DirectoryService;
 
 class ControllerBuilder
 {
-    public function __construct(private readonly DirectoryService $directoryService, private ControllerLogicGenerator $controllerLogicGenerator)
+    public function __construct(private readonly DirectoryService $directoryService)
     {}
 
     public function create(string $name, string $type, string $dir): string
@@ -19,7 +19,7 @@ class ControllerBuilder
         $pluginPrefix = ComposerPrefixExtractor::extractPrefix($dir);
 
         $dir = $this->directoryService->createControllerDirectories($controllersDir, $type);
-        $this->controllerLogicGenerator->generate($name, $type ,$dir, $pluginPrefix);
+        ControllerLogicGenerator::generate($name, $type ,$dir, $pluginPrefix);
 
         return $dir;
 

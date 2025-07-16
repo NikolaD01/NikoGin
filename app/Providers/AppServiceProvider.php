@@ -33,27 +33,28 @@ use NikoGin\Services\Structure\DirectoryService;
 
 class AppServiceProvider extends ServiceProvider
 {
+    // TODO :: Clean up there is lot of unnecessary instances , this classes dont contain state
     protected array $services = [
         DirectoryService::class,
 
-        BaseLogicGenerator::class,
-        BootLogicGenerator::class,
-        ControllerLogicGenerator::class,
-        MigrationLogicGenerator::class,
+     //   BaseLogicGenerator::class,
+       // BootLogicGenerator::class,
+      //  ControllerLogicGenerator::class,
+     //   MigrationLogicGenerator::class,
         ProviderLogicGenerator::class,
-        ListenerLogicGenerator::class,
-        ContractsLogicGenerator::class,
-        CronLogicGenerator::class,
+     //   ListenerLogicGenerator::class,
+       // ContractsLogicGenerator::class,
+       // CronLogicGenerator::class,
         RepositoryLogicGenerator::class,
         ShortcodeLogicGenerator::class,
 
-        ProviderBuilder::class   => [ProviderLogicGenerator::class],
-        MigrationBuilder::class  => [MigrationLogicGenerator::class],
-        ControllerBuilder::class => [DirectoryService::class, ControllerLogicGenerator::class],
-        PluginBuilder::class     => [BaseLogicGenerator::class, DirectoryService::class, ContractsLogicGenerator::class, BootLogicGenerator::class],
-        ListenerBuilder::class   => [ListenerLogicGenerator::class, DirectoryService::class],
-        CronBuilder::class => [CronLogicGenerator::class],
-        RepositoryBuilder::class => [DirectoryService::class,RepositoryLogicGenerator::class],
+        ProviderBuilder::class   => [],
+        MigrationBuilder::class  => [],
+        ControllerBuilder::class => [DirectoryService::class],
+        PluginBuilder::class     => [ DirectoryService::class],
+        ListenerBuilder::class   => [DirectoryService::class],
+        CronBuilder::class => [],
+        RepositoryBuilder::class => [DirectoryService::class],
         ShortCodeBuilder::class => [ShortcodeLogicGenerator::class],
 
         CreatePluginCommand::class     => [PluginBuilder::class],

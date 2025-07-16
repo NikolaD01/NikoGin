@@ -5,7 +5,7 @@ namespace NikoGin\Services\Logic;
 class ShortcodeLogicGenerator
 {
 
-    public function generate(string $name, string $action, string $shortcodeDir, string $pluginPrefix): void
+    public static function generate(string $name, string $action, string $shortcodeDir, string $pluginPrefix): void
     {
         $className = $name . 'Shortcode';
         $filePath  = rtrim($shortcodeDir, DIRECTORY_SEPARATOR)
@@ -20,7 +20,7 @@ class ShortcodeLogicGenerator
 
         // Only generate if file does not already exist
         if (! file_exists($filePath)) {
-            $content = $this->generateShortcode($name, $action, $pluginPrefix);
+            $content = self::generateShortcode($name, $action, $pluginPrefix);
             file_put_contents($filePath, $content);
         }
     }
@@ -28,7 +28,7 @@ class ShortcodeLogicGenerator
     /**
      * Build the actual shortcode class code.
      */
-    private function generateShortcode(string $name, string $action, string $pluginPrefix): string
+    private static function generateShortcode(string $name, string $action, string $pluginPrefix): string
     {
         $className    = $name . 'Shortcode';
         $namespace    = $pluginPrefix . '\\Http\\Admin\\Shortcodes';
