@@ -4,21 +4,21 @@ namespace NikoGin\Services\Logic;
 
 class ProviderLogicGenerator
 {
-    public function generate(string $name,string $pluginPrefix, string $dir ): void
+    public static function generate(string $name,string $pluginPrefix, string $dir ): void
     {
-        $content = $this->logic($name, $pluginPrefix);
+        $content = self::logic($name, $pluginPrefix);
         file_put_contents($dir . "/{$name}.php", $content );
 
-        $this->updateServiceProviderManager($name, $pluginPrefix, $dir);
+        self::updateServiceProviderManager($name, $pluginPrefix, $dir);
     }
 
-    private function logic(string $name, string $pluginPrefix): string
+    private static function logic(string $name, string $pluginPrefix): string
     {
 
         return "<?php\n\nnamespace {$pluginPrefix}\\Http\\Providers;\n\nuse {$pluginPrefix}\\Core\\Foundation\\ServiceProvider;\n\nclass {$name} extends ServiceProvider\n{\n  public array \$services = []; \n}";
     }
 
-    private function updateServiceProviderManager(string $name, string $pluginPrefix, string $dir): void
+    private static function updateServiceProviderManager(string $name, string $pluginPrefix, string $dir): void
     {
 
         // Todo: find better solution then regex

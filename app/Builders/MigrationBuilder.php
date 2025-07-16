@@ -7,7 +7,7 @@ use NikoGin\Services\Logic\MigrationLogicGenerator;
 
 class MigrationBuilder
 {
-    public function __construct(private readonly MigrationLogicGenerator $migrationLogicGenerator)
+    public function __construct()
     {}
 
     public function create(string $name, string $dir): string
@@ -18,7 +18,7 @@ class MigrationBuilder
         $migrationDir = sprintf('%s/%s/app/Http/Migrations', $currentDir, $dir);
         $pluginPrefix = ComposerPrefixExtractor::extractPrefix($dir);
 
-        $this->migrationLogicGenerator->generate($name, $pluginPrefix, $migrationDir);
+        MigrationLogicGenerator::generate($name, $pluginPrefix, $migrationDir);
 
         return $dir;
 

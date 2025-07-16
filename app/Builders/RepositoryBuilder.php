@@ -8,7 +8,7 @@ use NikoGin\Services\Structure\DirectoryService;
 
 class RepositoryBuilder
 {
-    public function __construct(private readonly DirectoryService $directoryService, private RepositoryLogicGenerator $repoLogicGenerator)
+    public function __construct(private readonly DirectoryService $directoryService)
     {}
 
     public function create(string $name, string $table, string $dir): string
@@ -19,7 +19,7 @@ class RepositoryBuilder
         $pluginPrefix = ComposerPrefixExtractor::extractPrefix($dir);
 
         $dir = $this->directoryService->createDir($httpDir, 'Repositories');
-        $this->repoLogicGenerator->generate($name, $table ,$dir, $pluginPrefix);
+        RepositoryLogicGenerator::generate($name, $table ,$dir, $pluginPrefix);
 
         return $dir;
 

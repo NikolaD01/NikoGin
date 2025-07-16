@@ -60,6 +60,10 @@ class DirectoryService
         mkdir($httpDir, 0755);
         $this->directories['http'] = $httpDir;
 
+        $middlewareDir = $httpDir . '/Middlewares';
+        mkdir($middlewareDir, 0755);
+        $this->directories['middlewares'] = $middlewareDir;
+
         // Create Controllers directory
         $controllerDir = $httpDir . '/Controllers';
         mkdir($controllerDir, 0755);

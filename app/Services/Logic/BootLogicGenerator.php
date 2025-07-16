@@ -3,7 +3,7 @@ namespace NikoGin\Services\Logic;
 
 class BootLogicGenerator
 {
-    public function generateActivator(string $pluginPrefix, string $pluginName): string
+    public static function generateActivator(string $pluginPrefix, string $pluginName): string
     {
         $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
@@ -43,7 +43,7 @@ class Activator implements Bootable
 PHP;
     }
 
-    public function generateDeactivator(string $pluginPrefix, string $pluginName): string
+    public static function generateDeactivator(string $pluginPrefix, string $pluginName): string
     {
         $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
@@ -78,7 +78,7 @@ class Deactivator implements Bootable
 PHP;
     }
 
-    public function generateLoader(string $pluginPrefix): string
+    public static function generateLoader(string $pluginPrefix): string
     {
         return <<<PHP
 <?php
@@ -113,7 +113,7 @@ class Loader implements Bootable
 PHP;
     }
 
-    public function generateUninstaller(string $pluginPrefix, string $pluginName): string
+    public static function generateUninstaller(string $pluginPrefix, string $pluginName): string
     {
         $constantDefinition = strtoupper(str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))) . '_FILE';
 
@@ -148,7 +148,7 @@ class Uninstaller implements Bootable
 PHP;
     }
 
-    public function generateRoutesRegistrar(string $pluginPrefix, string $pluginName): string
+    public static function generateRoutesRegistrar(string $pluginPrefix, string $pluginName): string
     {
         $dirConstant = strtoupper(
                 str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))
