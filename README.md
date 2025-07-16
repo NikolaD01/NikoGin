@@ -266,7 +266,6 @@ nikogin make:shortcode ExampleName example_action example/
 This is list of incoming features and commands : \
 **BE** 
 - Jobs (Depending on WooCommerce Action Scheduler (subject to change), WordPress background processes)
-- Middlewares (Package inside core with already done middlewares also ability to make new ones, this is for REST routing security)
 - WordPress component extension (Ability to easily extend any WordPress component as WpTable ) (Subject to change)
 - Commands (Extend WP CLI, create commands)
 - Seeders
