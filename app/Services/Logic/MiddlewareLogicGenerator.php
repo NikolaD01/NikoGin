@@ -124,4 +124,38 @@ final class BearerTokenAuth implements MiddlewareInterface
 } 
 PHP;
     }
+
+    public static function generate(string $name,string $pluginPrefix, string $dir ): void
+    {
+        $content = self::logic($name, $pluginPrefix);
+        file_put_contents($dir . "/{$name}.php", $content );
+    }
+
+    private static function logic(string $name, string $pluginPrefix): string
+    {
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\Http\Middlewares;
+
+use {$pluginPrefix}\Core\Contracts\MiddlewareInterface;
+use WP_Error;
+use WP_REST_Request;
+
+final class {$name} implements MiddlewareInterface
+{
+
+    /**
+     * Validates
+     *
+     * @return bool|WP_Error  Returns true if valid, or WP_Error on failure.
+     */
+    public static function verify(WP_REST_Request \$request): bool|WP_Error
+    {
+       // TODO :: Implement verify logic
+        return true;
+    }
+} 
+PHP;
+    }
 }

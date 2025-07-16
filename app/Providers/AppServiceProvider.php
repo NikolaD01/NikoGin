@@ -5,6 +5,7 @@ namespace NikoGin\Providers;
 use NikoGin\Builders\ControllerBuilder;
 use NikoGin\Builders\CronBuilder;
 use NikoGin\Builders\ListenerBuilder;
+use NikoGin\Builders\MiddlewareBuilder;
 use NikoGin\Builders\MigrationBuilder;
 use NikoGin\Builders\PluginBuilder;
 use NikoGin\Builders\ProviderBuilder;
@@ -13,6 +14,7 @@ use NikoGin\Builders\ShortcodeBuilder;
 use NikoGin\Command\CreateControllerCommand;
 use NikoGin\Command\CreateCronCommand;
 use NikoGin\Command\CreateListenerCommand;
+use NikoGin\Command\CreateMiddlewareCommand;
 use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Command\CreateProviderCommand;
@@ -37,33 +39,35 @@ class AppServiceProvider extends ServiceProvider
     protected array $services = [
         DirectoryService::class,
 
-     //   BaseLogicGenerator::class,
-       // BootLogicGenerator::class,
-      //  ControllerLogicGenerator::class,
-     //   MigrationLogicGenerator::class,
+        //   BaseLogicGenerator::class,
+        // BootLogicGenerator::class,
+        //  ControllerLogicGenerator::class,
+        //   MigrationLogicGenerator::class,
         ProviderLogicGenerator::class,
-     //   ListenerLogicGenerator::class,
-       // ContractsLogicGenerator::class,
-       // CronLogicGenerator::class,
+        //   ListenerLogicGenerator::class,
+        // ContractsLogicGenerator::class,
+        // CronLogicGenerator::class,
         RepositoryLogicGenerator::class,
         ShortcodeLogicGenerator::class,
 
         ProviderBuilder::class   => [],
         MigrationBuilder::class  => [],
+        MiddlewareBuilder::class => [],
         ControllerBuilder::class => [DirectoryService::class],
-        PluginBuilder::class     => [ DirectoryService::class],
+        PluginBuilder::class     => [DirectoryService::class],
         ListenerBuilder::class   => [DirectoryService::class],
-        CronBuilder::class => [],
+        CronBuilder::class       => [],
         RepositoryBuilder::class => [DirectoryService::class],
-        ShortCodeBuilder::class => [ShortcodeLogicGenerator::class],
+        ShortCodeBuilder::class  => [ShortcodeLogicGenerator::class],
 
         CreatePluginCommand::class     => [PluginBuilder::class],
         CreateControllerCommand::class => [ControllerBuilder::class],
         CreateMigrationCommand::class  => [MigrationBuilder::class],
         CreateProviderCommand::class   => [ProviderBuilder::class],
         CreateListenerCommand::class   => [ListenerBuilder::class],
-        CreateCronCommand::class => [CronBuilder::class],
+        CreateCronCommand::class       => [CronBuilder::class],
         CreateRepositoryCommand::class => [RepositoryBuilder::class],
-        CreateShortcodeCommand::class => [ShortcodeBuilder::class],
+        CreateShortcodeCommand::class  => [ShortcodeBuilder::class],
+        CreateMiddlewareCommand::class => [MiddlewareBuilder::class],
     ];
 }
