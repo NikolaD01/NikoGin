@@ -271,8 +271,7 @@ This is list of incoming features and commands : \
 - Seeders
 - Support Elements ( as Symfony d/dd etc ... ) 
 - API Foundation Support 
-- Routes Model/PostType binding (Idea here is to bind Post Object if we provide route with /product/{id} , id would return Post object)
-- Router expanding (To create Laravel like Router class methods, (groups, resources, middleware ... )) \
+- Routes Model/PostType binding (Idea here is to bind Post Object if we provide route with /product/{id} , id would return Post object) \
 **FE** \
 Idea here is when we want to create new plugin, we can have starter kits or none.
 With starter kits we can choose how we will make dashboards and what would be used as bundler.

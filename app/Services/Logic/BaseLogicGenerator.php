@@ -220,26 +220,112 @@ abstract class Shortcode
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Attributes;\n\nuse Attribute;\n\n#[Attribute(Attribute::TARGET_CLASS)]\nclass AsListener\n{\n    public function __construct(\n        public string \$name,\n    public string \$type,\n   public int \$priority = 10,\n        public int \$argsCount = 1\n    ) {}\n}";
     }
-
     public static function generateRouterLogic(string $pluginPrefix): string
     {
-        $apiNamespace = strtolower($pluginPrefix) . "/v1";
+        $apiNamespace = strtolower($pluginPrefix) . '/v1';
 
-        return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Support;\n\nclass Router\n{\n    private static string \$namespace = '{$apiNamespace}';\n\n    /**
-         * Register a REST route.
-         *
-         * @param string \$route The route path.
-         * @param array \$args The route arguments.
-         */\n    public static function add(string \$route, array \$args = []): void\n    {\n        register_rest_route(self::\$namespace, \$route, \$args);\n    }\n\n    /**
-         * Register multiple routes at once.
-         *
-         * @param string \$name The group name.
-         * @param array \$routes An associative array of routes.
-         */\n    public static function group(string \$name, array \$routes): void\n    {\n        foreach (\$routes as \$route => \$args) {\n            self::add(\$name . \$route, \$args);\n        }\n    }\n\n    /**
-         * Set the namespace for the REST routes.
-         *
-         * @param string \$namespace The namespace to use.
-         */\n    public static function setNamespace(string \$namespace): void\n    {\n        self::\$namespace = \$namespace;\n    }\n}";
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\\Core\\Support;
+
+use {$pluginPrefix}\\Core\\Contracts\\MiddlewareInterface;
+use {$pluginPrefix}\\Core\\Support\\Container;
+use InvalidArgumentException;
+use WP_REST_Server;
+
+class Router
+{
+    /** @var string REST namespace (e.g. 'myplugin/v1') */
+    private static string \$namespace = '{$apiNamespace}';
+
+    /**
+     * Register a REST route.
+     */
+    public static function add(string \$route, array \$args = []): void
+    {
+        register_rest_route(self::\$namespace, \$route, \$args);
+    }
+
+    /**
+     * Register multiple routes under a common prefix.
+     */
+    public static function group(string \$prefix, callable \$routesRegistrar): void
+    {
+        \$orig = self::\$namespace;
+        self::\$namespace = rtrim(self::\$namespace, '/') . \$prefix;
+        \$routesRegistrar();
+        self::\$namespace = \$orig;
+    }
+
+    /**
+     * Register a route with a middleware/permission callback.
+     */
+    public static function middleware(string \$middlewareClass, string \$route, array \$args = []): void
+    {
+        \$middleware = Container::get(\$middlewareClass);
+        if (! \$middleware instanceof MiddlewareInterface) {
+            throw new InvalidArgumentException("\$middlewareClass must implement MiddlewareInterface");
+        }
+        \$args['permission_callback'] = [ \$middleware, 'verify' ];
+        self::add(\$route, \$args);
+    }
+
+    /**
+     * Register a full set of RESTful routes for a resource.
+     *
+     * @param string \$baseRoute       e.g. '/items'
+     * @param string \$controllerClass Fully‑qualified controller class with methods:
+     *                                  index, show, store, update, destroy
+     */
+    public static function resource(string \$baseRoute, string \$controllerClass): void
+    {
+        // index (READABLE)
+        self::add(\$baseRoute, [
+            'methods'  => WP_REST_Server::READABLE,
+            'callback' => [\$controllerClass, 'index'],
+        ]);
+
+        // show (READABLE)
+        self::add(\$baseRoute . '/(?P<id>\\d+)', [
+            'methods'  => WP_REST_Server::READABLE,
+            'callback' => [\$controllerClass, 'show'],
+            'args'     => ['id' => ['validate_callback' => 'is_numeric']],
+        ]);
+
+        // store (CREATABLE)
+        self::add(\$baseRoute, [
+            'methods'             => WP_REST_Server::CREATABLE,
+            'callback'            => [\$controllerClass, 'store'],
+            'permission_callback' => [Container::get(\$controllerClass), 'storePermission'] ?? '__return_true',
+        ]);
+
+        // update (EDITABLE)
+        self::add(\$baseRoute . '/(?P<id>\\d+)', [
+            'methods'             => WP_REST_Server::EDITABLE,
+            'callback'            => [\$controllerClass, 'update'],
+            'permission_callback' => [Container::get(\$controllerClass), 'updatePermission'] ?? '__return_true',
+            'args'                => ['id' => ['validate_callback' => 'is_numeric']],
+        ]);
+
+        // destroy (DELETABLE)
+        self::add(\$baseRoute . '/(?P<id>\\d+)', [
+            'methods'             => WP_REST_Server::DELETABLE,
+            'callback'            => [\$controllerClass, 'destroy'],
+            'permission_callback' => [Container::get(\$controllerClass), 'destroyPermission'] ?? '__return_true',
+            'args'                => ['id' => ['validate_callback' => 'is_numeric']],
+        ]);
+    }
+
+    /**
+     * Change the REST namespace (e.g. 'myplugin/v2').
+     */
+    public static function setNamespace(string \$namespace): void
+    {
+        self::\$namespace = \$namespace;
+    }
+}
+PHP;
     }
 
     public static function generateComposerJson(string $directoryName, string $pluginPrefix): array
