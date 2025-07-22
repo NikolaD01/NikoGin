@@ -262,6 +262,22 @@ nikogin make:shortcode ExampleName example_action example/
 
 ---
 
+### Create a Middleware
+
+```sh
+nikogin make:middleware <Name> <Dir>
+```
+
+### Example
+```sh
+nikogin make:middleware ExampleName example/
+```
+
+### Description:
+- Creates a Middleware for wordpress router
+
+---
+
 ## Incoming
 This is list of incoming features and commands : \
 **BE** 
