@@ -10,7 +10,6 @@ use NikoGin\Services\Structure\DirectoryService;
 class ListenerBuilder
 {
     public function __construct(
-        private ListenerLogicGenerator $listenerLogicGenerator,
         private  DirectoryService $directoryService)
     {}
 
@@ -26,7 +25,7 @@ class ListenerBuilder
 
         $data['dir'] = $listenerDir;
 
-        $this->listenerLogicGenerator->generate($data, $pluginPrefix);
+        ListenerLogicGenerator::generate($data, $pluginPrefix);
 
         return $listenerDir;
     }

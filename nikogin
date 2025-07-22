@@ -1,8 +1,25 @@
-#!/user/bin/env php
+#!/usr/bin/env php
 <?php
 
 use NikoGin\Managers\ServiceProviderManager;
 
-require __DIR__ . '/vendor/autoload.php';
+$autoloadPaths = [
+    __DIR__ . '/../../autoload.php', // Composer global vendor dir (when installed globally)
+    __DIR__ . '/vendor/autoload.php', // Local dev vendor dir
+];
+
+$autoloadFound = false;
+foreach ($autoloadPaths as $autoload) {
+    if (file_exists($autoload)) {
+        require $autoload;
+        $autoloadFound = true;
+        break;
+    }
+}
+
+if (!$autoloadFound) {
+    fwrite(STDERR, "Could not find Composer autoload.php.\n");
+    exit(1);
+}
 
 ServiceProviderManager::getInstance()->register();

@@ -10,7 +10,7 @@ class RepositoryLogicGenerator
      * @param string $repoDir       Directory where the file should go
      * @param string $pluginPrefix  Plugin prefix (e.g. "ET")
      */
-    public function generate(string $name, string $table, string $repoDir, string $pluginPrefix): void
+    public static function generate(string $name, string $table, string $repoDir, string $pluginPrefix): void
     {
         $filePath = "$repoDir/$name.php";
 
@@ -20,7 +20,7 @@ class RepositoryLogicGenerator
         }
 
         if (!file_exists($filePath)) {
-            $content = $this->generateRepositoryClass($name, $table, $pluginPrefix);
+            $content = self::generateRepositoryClass($name, $table, $pluginPrefix);
             file_put_contents($filePath, $content);
         }
     }
@@ -28,7 +28,7 @@ class RepositoryLogicGenerator
     /**
      * Build the repository class code.
      */
-    private function generateRepositoryClass(string $name, string $table, string $pluginPrefix): string
+    private static function generateRepositoryClass(string $name, string $table, string $pluginPrefix): string
     {
         $className      = $name . 'Repository';
         $namespace      = $pluginPrefix . '\Http\Repositories';

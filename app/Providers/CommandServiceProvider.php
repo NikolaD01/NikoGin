@@ -6,6 +6,7 @@ use Exception;
 use NikoGin\Command\CreateControllerCommand;
 use NikoGin\Command\CreateCronCommand;
 use NikoGin\Command\CreateListenerCommand;
+use NikoGin\Command\CreateMiddlewareCommand;
 use NikoGin\Command\CreateMigrationCommand;
 use NikoGin\Command\CreatePluginCommand;
 use NikoGin\Command\CreateProviderCommand;
@@ -25,8 +26,8 @@ class CommandServiceProvider extends ServiceProvider
         CreateListenerCommand::class,
         CreateCronCommand::class,
         CreateRepositoryCommand::class,
-        CreateShortcodeCommand::class
-
+        CreateShortcodeCommand::class,
+        CreateMiddlewareCommand::class
     ];
 
     public function register(): void

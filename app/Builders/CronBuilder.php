@@ -7,7 +7,7 @@ use NikoGin\Services\Logic\CronLogicGenerator;
 
 class CronBuilder
 {
-    public function __construct(public CronLogicGenerator $cronLogicGenerator)
+    public function __construct()
     {}
 
     public function create(string $name, string $dir) : string
@@ -20,8 +20,8 @@ class CronBuilder
 
         $pluginPrefix = ComposerPrefixExtractor::extractPrefix($dir);
 
-        $this->cronLogicGenerator->generateProvider($name, $pluginPrefix, $providerDir);
-        $this->cronLogicGenerator->generate($name, $pluginPrefix, $cronDir);
+        CronLogicGenerator::generateProvider($name, $pluginPrefix, $providerDir);
+        CronLogicGenerator::generate($name, $pluginPrefix, $cronDir);
 
         return $dir;
     }

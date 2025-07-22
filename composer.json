@@ -10,8 +10,11 @@
             "role": "Developer"
         }
     ],
+    "bin": [
+        "nikogin"
+    ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "symfony/console": "^7.2",
         "symfony/process": "^7.2"
     },
