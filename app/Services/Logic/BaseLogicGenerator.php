@@ -475,6 +475,87 @@ abstract class Repository
 PHP;
     }
 
+    public static function generateHTTPLogic(string $pluginPrefix): string
+    {
+        return <<<PHP
+<?php
+namespace {$pluginPrefix}\\Core\\Support;
+
+class HTTP
+{
+    /**
+     * Send a GET request
+     */
+    public static function get(string \$url, array \$headers = []): array
+    {
+        return self::request('GET', \$url, [], \$headers);
+    }
+
+    /**
+     * Send a POST request
+     */
+    public static function post(string \$url, array \$data = [], array \$headers = []): array
+    {
+        return self::request('POST', \$url, \$data, \$headers);
+    }
+
+    /**
+     * Send a PUT request
+     */
+    public static function put(string \$url, array \$data = [], array \$headers = []): array
+    {
+        return self::request('PUT', \$url, \$data, \$headers);
+    }
+
+    /**
+     * Send a DELETE request
+     */
+    public static function delete(string \$url, array \$headers = []): array
+    {
+        return self::request('DELETE', \$url, [], \$headers);
+    }
+
+    /**
+     * Generic request handler
+     */
+    protected static function request(string \$method, string \$url, array \$data = [], array \$headers = []): array
+    {
+        \$args = [
+            'method'  => strtoupper(\$method),
+            'headers' => array_merge([
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+            ], \$headers),
+        ];
+
+        if (!empty(\$data)) {
+            \$args['body'] = json_encode(\$data);
+        }
+
+        \$response = wp_remote_request(\$url, \$args);
+
+        if (is_wp_error(\$response)) {
+            return [
+                'success' => false,
+                'error'   => \$response->get_error_message(),
+            ];
+        }
+
+        \$code = wp_remote_retrieve_response_code(\$response);
+        \$body = wp_remote_retrieve_body(\$response);
+
+        return [
+            'success' => \$code >= 200 && \$code < 300,
+            'code'    => \$code,
+            'body'    => json_decode(\$body, true),
+            'raw'     => \$body,
+        ];
+    }
+}
+PHP;
+
+    }
+
 
 }
 
