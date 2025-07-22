@@ -59,6 +59,7 @@ class PluginBuilder
             $directories['traits'] . '/DB.php'                       => BaseLogicGenerator::generateDBLogic($pluginPrefix),
             $directories['support'] . '/Container.php'               => BaseLogicGenerator::generateContainerLogic($pluginPrefix),
             $directories['support'] . '/Router.php'                  => BaseLogicGenerator::generateRouterLogic($pluginPrefix),
+            $directories['support'] . '/HTTP.php'                    => BaseLogicGenerator::generateHTTPLogic($pluginPrefix),
             $directories['attributes'] . '/AsListener.php'           => BaseLogicGenerator::generateAsListenerLogic($pluginPrefix),
             $directories['contracts'] . '/CronInterface.php'         => ContractsLogicGenerator::generateCronInterface($pluginPrefix),
             $directories['contracts'] . '/MiddlewareInterface.php'   => ContractsLogicGenerator::generateMiddlewareInterface($pluginPrefix),
