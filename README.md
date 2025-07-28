@@ -12,6 +12,7 @@ NikoGin is a command-line tool that automates the creation of a structured, mode
 -   Includes commands for scaffolding controllers, cron events, migrations, providers, listeners, repositories, and shortcodes.
 -   Enforces a clean architecture with a pre-configured service container.
 -   Uses Composer for autoloading and dependency management.
+-   Starter kits : react ( in future : twig, vanilla etc ...)
 
 ---
 
@@ -288,10 +289,7 @@ This is list of incoming features and commands : \
 - Support Elements ( as Symfony d/dd etc ... ) 
 - Routes Model/PostType binding (Idea here is to bind Post Object if we provide route with /product/{id} , id would return Post object) \
 **FE** \
-Idea here is when we want to create new plugin, we can have starter kits or none.
-With starter kits we can choose how we will make dashboards and what would be used as bundler.
-For example goal is that user can choose react, twig or base php , so for react we can use wp-scripts,
-for twig or php we can use vite with typescript , and at end user can choose vanilla js without bundlers \
+Add rest of starter kits : twig, vanilla and any other idea we have 
 **Exclude** \
 When creating plugin idea is to prompt user with yes/no if user want to exclude some foundation.
 Example user is creating Plugin for Rest routes where he will just handle data from request, for this theoretically,
