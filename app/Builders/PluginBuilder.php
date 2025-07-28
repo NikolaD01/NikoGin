@@ -2,9 +2,14 @@
 
 namespace NikoGin\Builders;
 
+use NikoGin\Services\Logic\AttributesLogicGenerator;
 use NikoGin\Services\Logic\BaseLogicGenerator;
 use NikoGin\Services\Logic\ContractsLogicGenerator;
+use NikoGin\Services\Logic\FileLogicGenerator;
+use NikoGin\Services\Logic\ManagerLogicGenerator;
 use NikoGin\Services\Logic\MiddlewareLogicGenerator;
+use NikoGin\Services\Logic\SupportLogicGenerator;
+use NikoGin\Services\Logic\TraitLogicGenerator;
 use NikoGin\Services\Structure\DirectoryService;
 use NikoGin\Services\Logic\BootLogicGenerator;
 
@@ -36,7 +41,7 @@ class PluginBuilder
         $directories = $this->directoryService->createDirectories($pluginDir);
 
         $files = [
-            $pluginDir . "/" . $directorySlug . ".php"               => BaseLogicGenerator::generateMainFileLogic($pluginPrefix, $pluginName),
+            $pluginDir . "/" . $directorySlug . ".php"               => FileLogicGenerator::generateMainFileLogic($pluginPrefix, $pluginName),
             $directories['contracts'] . '/Bootable.php'              => ContractsLogicGenerator::generateBootable($pluginPrefix),
             $directories['bootstrap'] . '/Activator.php'             => BootLogicGenerator::generateActivator($pluginPrefix, $pluginName),
             $directories['bootstrap'] . '/Loader.php'                => BootLogicGenerator::generateLoader($pluginPrefix),
@@ -53,20 +58,21 @@ class PluginBuilder
             $directories['foundation'] . '/Listener.php'             => BaseLogicGenerator::generateListenerLogic($pluginPrefix),
             $directories['foundation'] . '/Repository.php'           => BaseLogicGenerator::generateRepository($pluginPrefix),
             $directories['foundation'] . '/Shortcode.php'            => BaseLogicGenerator::generateShortcode($pluginPrefix),
-            $directories['managers'] . '/ServiceProviderManager.php' => BaseLogicGenerator::generateServiceProviderManagerLogic($pluginPrefix),
-            $directories['managers'] . '/ListenerManager.php'        => BaseLogicGenerator::generateListenerManagerLogic($pluginPrefix),
-            $directories['traits'] . '/IsSingleton.php'              => BaseLogicGenerator::generateIsSingletonTraitLogic($pluginPrefix),
-            $directories['traits'] . '/DB.php'                       => BaseLogicGenerator::generateDBLogic($pluginPrefix),
-            $directories['support'] . '/Container.php'               => BaseLogicGenerator::generateContainerLogic($pluginPrefix),
-            $directories['support'] . '/Router.php'                  => BaseLogicGenerator::generateRouterLogic($pluginPrefix),
-            $directories['support'] . '/HTTP.php'                    => BaseLogicGenerator::generateHTTPLogic($pluginPrefix),
-            $directories['attributes'] . '/AsListener.php'           => BaseLogicGenerator::generateAsListenerLogic($pluginPrefix),
+            $directories['managers'] . '/ServiceProviderManager.php' => ManagerLogicGenerator::generateServiceProviderManagerLogic($pluginPrefix),
+            $directories['managers'] . '/ListenerManager.php'        => ManagerLogicGenerator::generateListenerManagerLogic($pluginPrefix),
+            $directories['traits'] . '/IsSingleton.php'              => TraitLogicGenerator::generateIsSingletonTraitLogic($pluginPrefix),
+            $directories['traits'] . '/DB.php'                       => TraitLogicGenerator::generateDBLogic($pluginPrefix),
+            $directories['traits'] . '/HasPermissions.php'               => TraitLogicGenerator::generateHasPermissionsTrait($pluginPrefix),
+            $directories['support'] . '/Container.php'               => SupportLogicGenerator::generateContainerLogic($pluginPrefix),
+            $directories['support'] . '/Router.php'                  => SupportLogicGenerator::generateRouterLogic($pluginPrefix, $pluginName),
+            $directories['support'] . '/HTTP.php'                    => SupportLogicGenerator::generateHTTPLogic($pluginPrefix),
+            $directories['attributes'] . '/AsListener.php'           => AttributesLogicGenerator::generateAsListenerLogic($pluginPrefix),
             $directories['contracts'] . '/CronInterface.php'         => ContractsLogicGenerator::generateCronInterface($pluginPrefix),
             $directories['contracts'] . '/MiddlewareInterface.php'   => ContractsLogicGenerator::generateMiddlewareInterface($pluginPrefix),
             $directories['middlewares'] . '/BasicAuth.php'           => MiddlewareLogicGenerator::generateBasicAuth($pluginPrefix),
             $directories['middlewares'] . '/BearerTokenAuth.php'     => MiddlewareLogicGenerator::generateBearerTokenAuth($pluginPrefix),
-            $directories['routes'] . '/web.php'                      => BaseLogicGenerator::generateWebRouterLogic($pluginPrefix),
-            $directories['routes'] . '/api.php'                      => BaseLogicGenerator::generateApiRouterLogic($pluginPrefix),
+            $directories['routes'] . '/web.php'                      => FileLogicGenerator::generateWebRouterLogic($pluginPrefix),
+            $directories['routes'] . '/api.php'                      => FileLogicGenerator::generateApiRouterLogic($pluginPrefix),
         ];
 
         foreach ($files as $path => $content) {
