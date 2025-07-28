@@ -10,6 +10,7 @@ use NikoGin\Services\Logic\ManagerLogicGenerator;
 use NikoGin\Services\Logic\MiddlewareLogicGenerator;
 use NikoGin\Services\Logic\SupportLogicGenerator;
 use NikoGin\Services\Logic\TraitLogicGenerator;
+use NikoGin\Services\StarterKits\ReactKitGenerator;
 use NikoGin\Services\Structure\DirectoryService;
 use NikoGin\Services\Logic\BootLogicGenerator;
 
@@ -23,7 +24,7 @@ class PluginBuilder
     )
     {}
 
-    public function create(string $pluginName, string $pluginPrefix, string $pluginDir, string $directorySlug): void
+    public function create(string $pluginName, string $pluginPrefix, string $pluginDir, string $directorySlug, array $options = []): void
     {
 
         if (!mkdir($pluginDir, 0755, true) && !is_dir($pluginDir)) {
@@ -32,13 +33,16 @@ class PluginBuilder
         $composerJson = BaseLogicGenerator::generateComposerJson($directorySlug, $pluginPrefix);
         file_put_contents($pluginDir . '/composer.json', json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        $this->createStructure($pluginDir, $pluginPrefix, $pluginName, $directorySlug);
+        $this->createStructure($pluginDir, $pluginPrefix, $pluginName, $directorySlug, $options);
 
     }
 
-    private function createStructure(string $pluginDir, string $pluginPrefix, string $pluginName, string $directorySlug): void
+    private function createStructure(string $pluginDir, string $pluginPrefix, string $pluginName, string $directorySlug, array $options): void
     {
+
         $directories = $this->directoryService->createDirectories($pluginDir);
+
+        $starterKit = $options['kit'] ?? '';
 
         $files = [
             $pluginDir . "/" . $directorySlug . ".php"               => FileLogicGenerator::generateMainFileLogic($pluginPrefix, $pluginName),
@@ -74,6 +78,17 @@ class PluginBuilder
             $directories['routes'] . '/web.php'                      => FileLogicGenerator::generateWebRouterLogic($pluginPrefix),
             $directories['routes'] . '/api.php'                      => FileLogicGenerator::generateApiRouterLogic($pluginPrefix),
         ];
+
+        if ($starterKit === 'React') {
+            $reactFiles = ReactKitGenerator::generate($pluginDir, $pluginPrefix, $pluginName);
+
+            $srcDir = $this->directoryService->createDir($pluginDir, 'src');
+            $this->directoryService->createDir($srcDir , 'pages');
+            $this->directoryService->createDir($srcDir , 'styles');
+
+            $files = array_merge($files, $reactFiles);
+        }
+
 
         foreach ($files as $path => $content) {
             file_put_contents($path, $content);

@@ -6,14 +6,21 @@ class DirectoryService
 {
     private array $directories = [];
 
+    public function createDir(string $dir, string $dirName): string
+    {
+        $directoryPath =  $dir . '/' . $dirName;
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
+        return $directoryPath;
+    }
+
     public function createDirectories(string $pluginDir): array
     {
         // Define the app directory
         $appDir = $pluginDir . '/app';
         mkdir($appDir, 0755);
         $this->directories['app'] = $appDir;
-
-
 
         $routesDir = $appDir . '/routes';
         mkdir($routesDir, 0755);
@@ -90,7 +97,7 @@ class DirectoryService
     /*
      * This is universal method for creating single level directors
      */
-    public function createDir(string $httpDir, string $dirName): string
+    public function createHttpDir(string $httpDir, string $dirName): string
     {
         $directoryPath =  $httpDir . '/' . $dirName;
         if (!is_dir($directoryPath)) {
