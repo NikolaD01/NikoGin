@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Process\Process;
 
 #[AsCommand(
@@ -30,6 +31,19 @@ class CreatePluginCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $helper = $this->getHelper('question');
+
+        $starterKitQuestion = new ChoiceQuestion(
+            question: 'Which starter kit do you want to include?',
+            choices: ['None','React','Twig','Vanilla'],
+            default: 0
+        );
+
+        $starterKitQuestion->setErrorMessage('Starter kit %s is invalid.');
+        $starterKit = $helper->ask($input, $output, $starterKitQuestion);
+
+        $output->writeln('<info>Starter kit selected: ' . $starterKit . '</info>');
+
         $pluginName = $input->getArgument('pluginName');
         $pluginPrefix = $input->getArgument('pluginPrefix');
         $wordpressPath = $input->getArgument('path');
@@ -53,7 +67,10 @@ class CreatePluginCommand extends Command
         }
 
         try {
-            $this->pluginBuilder->create($pluginName, $pluginPrefix, $pluginDir, $directorySlug);
+            // Set all arguments or most of them in array.
+            $this->pluginBuilder->create($pluginName, $pluginPrefix, $pluginDir, $directorySlug, [
+                'kit' => $starterKit
+            ]);
             $output->writeln("<info>Plugin directory created at: {$pluginDir}</info>");
             $output->writeln("<info>composer.json created with prefix: {$pluginPrefix}</info>");
 
