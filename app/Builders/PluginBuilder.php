@@ -51,6 +51,7 @@ class PluginBuilder
             $directories['bootstrap'] . '/Loader.php'                => BootLogicGenerator::generateLoader($pluginPrefix),
             $directories['bootstrap'] . '/Deactivator.php'           => BootLogicGenerator::generateDeactivator($pluginPrefix, $pluginName),
             $directories['bootstrap'] . '/Uninstaller.php'           => BootLogicGenerator::generateUninstaller($pluginPrefix, $pluginName),
+            $directories['bootstrap'] . '/BlockRegistrar.php'        => BootLogicGenerator::generateBlockRegistrar($pluginPrefix, $pluginName),
             $directories['bootstrap'] . '/RoutesRegistrar.php'       => BootLogicGenerator::generateRoutesRegistrar($pluginPrefix, $pluginName),
             $directories['app'] . '/Bootstrap.php'                   => BaseLogicGenerator::generateBootstrapLogic($pluginPrefix, $pluginName),
             $directories['foundation'] . '/ProviderManager.php'      => BaseLogicGenerator::generateProviderManagerLogic($pluginPrefix),
@@ -85,6 +86,10 @@ class PluginBuilder
             $srcDir = $this->directoryService->createDir($pluginDir, 'src');
             $this->directoryService->createDir($srcDir , 'pages');
             $this->directoryService->createDir($srcDir , 'styles');
+            $this->directoryService->createDir($srcDir , 'types');
+            $blockDir = $this->directoryService->createDir($srcDir , 'blocks');
+            $this->directoryService->createDir($blockDir , 'block-example');
+
 
             $files = array_merge($files, $reactFiles);
         }

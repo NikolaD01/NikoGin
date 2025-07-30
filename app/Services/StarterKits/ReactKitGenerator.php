@@ -7,14 +7,18 @@ class ReactKitGenerator
     public static function generate(string $pluginDir, string $pluginPrefix, string $pluginName): array
     {
         return [
-            $pluginDir . '/package.json' => self::generatePackageJson($pluginName),
-            $pluginDir . '/src/dashboard.tsx' => self::generateDashboardTsx($pluginPrefix),
-            $pluginDir . '/src/pages/DashboardPage.tsx' => self::generateDashboardPageTsx($pluginPrefix),
-            $pluginDir . '/webpack.config.js' => self::generateWebpackConfig(),
-            $pluginDir . '/tailwind.config.js' => self::generateTailwindConfig($pluginPrefix),
-            $pluginDir . '/postcss.config.js' => self::generatePostcssConfig(),
-            $pluginDir . '/tsconfig.json' => self::generateTsconfig(),
-            $pluginDir . '/src/styles/index.css' => self::generateTailwindIndexCss($pluginPrefix),
+            $pluginDir . '/package.json'                        => self::generatePackageJson($pluginName),
+            $pluginDir . '/src/dashboard.tsx'                   => self::generateDashboardTsx($pluginPrefix),
+            $pluginDir . '/src/index.ts'                        => self::generateIndex(),
+            $pluginDir . '/src/pages/DashboardPage.tsx'         => self::generateDashboardPageTsx($pluginPrefix),
+            $pluginDir . '/webpack.config.js'                   => self::generateWebpackConfig(),
+            $pluginDir . '/tailwind.config.js'                  => self::generateTailwindConfig($pluginPrefix),
+            $pluginDir . '/postcss.config.js'                   => self::generatePostcssConfig(),
+            $pluginDir . '/tsconfig.json'                       => self::generateTsconfig(),
+            $pluginDir . '/src/styles/index.css'                => self::generateTailwindIndexCss($pluginPrefix),
+            $pluginDir . '/src/blocks/block-example/block.json' => self::blockExampleJson(),
+            $pluginDir . '/src/blocks/block-example/index.tsx'  => self::blockExample(),
+            $pluginDir . '/types/block-props.d.ts'              => self::blockProps(),
         ];
     }
 
@@ -44,6 +48,8 @@ class ReactKitGenerator
                 '@types/dompurify' => '^3.0.5',
                 '@types/react' => '^19.0.10',
                 '@types/react-dom' => '^19.0.4',
+                '@types/wordpress__block-editor' => '^11.5.17',
+                '@types/wordpress__blocks' => '^12.5.18',
                 '@wordpress/scripts' => '^30.11.0',
                 'autoprefixer' => '^10.4.20',
                 'css-loader' => '^7.1.2',
@@ -106,6 +112,7 @@ module.exports = {
     ...defaultConfig,
     entry: {
         'admin-dashboard': path.resolve(process.cwd(), 'src/dashboard.tsx'),
+        'index': path.resolve(process.cwd(), 'src/index.ts'),
     },
     module: {
         ...defaultConfig.module,
@@ -247,6 +254,66 @@ JSON;
     }
 }
 CSS;
+    }
+
+    private static function blockExampleJson(): string
+    {
+        return <<<JSON
+{
+  "apiVersion": 2,
+  "name": "myplugin/block-example",
+  "title": "Example Block",
+  "category": "widgets",
+  "icon": "smiley",
+  "description": "A simple example block.",
+  "editorScript": "file:../../index.js"
+}
+JSON;
+    }
+
+
+    private static function blockExample(): string
+    {
+        return <<<TSX
+import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+import metadata from './block.json';
+
+registerBlockType(metadata as any, {
+    edit: () => {
+        const blockProps = useBlockProps();
+        return (
+            <div {...blockProps}>
+                <h3>Hello from Example Block</h3>
+                <p>This block was generated with ReactKitGenerator.</p>
+            </div>
+        );
+    },
+    save: () => {
+        const blockProps = useBlockProps.save();
+        return (
+            <div {...blockProps}>
+                <h3>Hello from Example Block</h3>
+                <p>This block was generated with ReactKitGenerator.</p>
+            </div>
+        );
+    },
+});
+TSX;
+    }
+
+    private static function generateIndex(): string
+    {
+        return <<<TS
+import './blocks/block-example';
+TS;
+    }
+
+    private static function blockProps(): string
+    {
+        return <<<TS
+import { MyBlockProps } from '@/types/block-props';
+TS;
     }
 
 }
