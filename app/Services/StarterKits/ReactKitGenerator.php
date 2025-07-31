@@ -4,17 +4,24 @@ namespace NikoGin\Services\StarterKits;
 
 class ReactKitGenerator
 {
-    public static function generate(string $pluginDir, string $pluginPrefix, string $pluginName): array
+    public static function generate(string $pluginDir, string $pluginPrefix, string $pluginName, array $directories): array
     {
         return [
-            $pluginDir . '/package.json' => self::generatePackageJson($pluginName),
-            $pluginDir . '/src/dashboard.tsx' => self::generateDashboardTsx($pluginPrefix),
-            $pluginDir . '/src/pages/DashboardPage.tsx' => self::generateDashboardPageTsx($pluginPrefix),
-            $pluginDir . '/webpack.config.js' => self::generateWebpackConfig(),
-            $pluginDir . '/tailwind.config.js' => self::generateTailwindConfig($pluginPrefix),
-            $pluginDir . '/postcss.config.js' => self::generatePostcssConfig(),
-            $pluginDir . '/tsconfig.json' => self::generateTsconfig(),
-            $pluginDir . '/src/styles/index.css' => self::generateTailwindIndexCss($pluginPrefix),
+            $pluginDir . '/package.json'                    => self::generatePackageJson($pluginName),
+            $directories['src'] . '/dashboard.tsx'          => self::generateDashboardTsx($pluginPrefix),
+            $directories['src'] . '/block.ts'               => self::generateIndex(),
+            $directories['pages'] . '/DashboardPage.tsx'    => self::generateDashboardPageTsx($pluginPrefix),
+            $pluginDir . '/webpack.config.js'               => self::generateWebpackConfig(),
+            $pluginDir . '/tailwind.config.js'              => self::generateTailwindConfig($pluginPrefix),
+            $pluginDir . '/postcss.config.js'               => self::generatePostcssConfig(),
+            $pluginDir . '/tsconfig.json'                   => self::generateTsconfig(),
+            $directories['styles'] . '/index.css'           => self::generateTailwindIndexCss($pluginPrefix),
+            $directories['block-example'] . '/block.json'   => self::blockExampleJson($pluginPrefix),
+            $directories['block-example'] . '/index.tsx'    => self::blockExample(),
+            $directories['types'] . '/block-props.d.ts'     => self::blockProps(),
+            $directories['types'] . '/require-context.d.ts' => self::requireContext(),
+            $directories['services'] . '/BaseApi.ts'        => self::BaseApi($pluginPrefix),
+            $directories['services'] . '/ExampleService.ts' => self::generateExampleService(),
         ];
     }
 
@@ -44,6 +51,8 @@ class ReactKitGenerator
                 '@types/dompurify' => '^3.0.5',
                 '@types/react' => '^19.0.10',
                 '@types/react-dom' => '^19.0.4',
+                '@types/wordpress__block-editor' => '^11.5.17',
+                '@types/wordpress__blocks' => '^12.5.18',
                 '@wordpress/scripts' => '^30.11.0',
                 'autoprefixer' => '^10.4.20',
                 'css-loader' => '^7.1.2',
@@ -106,6 +115,7 @@ module.exports = {
     ...defaultConfig,
     entry: {
         'admin-dashboard': path.resolve(process.cwd(), 'src/dashboard.tsx'),
+        'block': path.resolve(process.cwd(), 'src/block.ts'),
     },
     module: {
         ...defaultConfig.module,
@@ -248,5 +258,160 @@ JSON;
 }
 CSS;
     }
+
+    private static function blockExampleJson(string $pluginPrefix): string
+    {
+        return <<<JSON
+{
+  "apiVersion": 2,
+  "name": "{$pluginPrefix}/block-example",
+  "title": "Example Block",
+  "category": "widgets",
+  "icon": "smiley",
+  "description": "A simple example block.",
+  "editorScript": "file:../../block.js"
+}
+JSON;
+    }
+
+
+    private static function blockExample(): string
+    {
+        return <<<TSX
+import { registerBlockType } from '@wordpress/blocks';
+import { useBlockProps } from '@wordpress/block-editor';
+import metadata from './block.json';
+
+registerBlockType(metadata as any, {
+    edit: () => {
+        const blockProps = useBlockProps();
+        return (
+            <div {...blockProps}>
+                <h3>Hello from Example Block</h3>
+                <p>This is shown in WP Editor.</p>
+            </div>
+        );
+    },
+    save: () => {
+        const blockProps = useBlockProps.save();
+        return (
+            <div {...blockProps}>
+                <h3>Hello from Example Block</h3>
+                <p>This is shown in Frontend.</p>
+            </div>
+        );
+    },
+});
+TSX;
+    }
+
+    private static function generateIndex(): string
+    {
+        return <<<TS
+// Automatically import all blocks in ./blocks
+const context = require.context('./blocks', true, /\\.tsx?$/);
+context.keys().forEach(context);
+TS;
+    }
+
+    private static function blockProps(): string
+    {
+        return <<<TS
+import { MyBlockProps } from '@/types/block-props';
+TS;
+    }
+
+    private static function requireContext(): string
+    {
+        return <<<TS
+declare const require: {
+    context(path: string, deep?: boolean, filter?: RegExp): {
+        keys(): string[];
+        <T>(id: string): T;
+    };
+};
+TS;
+    }
+
+    private static function BaseApi(string $pluginPrefix): string
+    {
+        return <<<TS
+import apiFetch from '@wordpress/api-fetch';
+
+export class BaseApi {
+    protected static prefix = '/{$pluginPrefix}/v1';
+
+    static get<T = any>(endpoint: string, options: { query?: Record<string, any> } = {}): Promise<T> {
+        const queryString = options.query
+            ? '?' + new URLSearchParams(options.query as Record<string, string>).toString()
+            : '';
+
+        return apiFetch({
+            path: `\${this.prefix}\${endpoint}\${queryString}`,
+            method: 'GET',
+        });
+    }
+
+    static post<T = any>(endpoint: string, data: any, options: Record<string, any> = {}): Promise<T> {
+        return apiFetch({
+            path: `\${this.prefix}\${endpoint}`,
+            method: 'POST',
+            data,
+            ...options,
+        });
+    }
+
+    static put<T = any>(endpoint: string, data: any, options: Record<string, any> = {}): Promise<T> {
+        return apiFetch({
+            path: `\${this.prefix}\${endpoint}`,
+            method: 'PUT',
+            data,
+            ...options,
+        });
+    }
+
+    static delete<T = any>(endpoint: string, options: Record<string, any> = {}): Promise<T> {
+        return apiFetch({
+            path: `\${this.prefix}\${endpoint}`,
+            method: 'DELETE',
+            ...options,
+        });
+    }
+}
+TS;
+    }
+
+    private static function generateExampleService(): string
+    {
+        return <<<TS
+import { BaseApi } from './BaseApi';
+
+const EXAMPLE = '/example';
+
+export const exampleService = {
+    getAll: () => BaseApi.get(EXAMPLE),
+
+    getOne: (id: number) => BaseApi.get(`\${EXAMPLE}/\${id}`),
+
+    delete: (id: number) => BaseApi.delete(`\${EXAMPLE}/\${id}`),
+
+    create: (data: any) => BaseApi.post(EXAMPLE, data),
+
+    paginated(page: number = 1, search: string = '', perPage: number = 24) {
+        const query: Record<string, string> = {
+            page: page.toString(),
+            per_page: perPage.toString(),
+        };
+
+        if (search.trim() !== '') {
+            query.search = search;
+        }
+
+        return BaseApi.get(EXAMPLE, { query });
+    },
+};
+TS;
+    }
+
 
 }

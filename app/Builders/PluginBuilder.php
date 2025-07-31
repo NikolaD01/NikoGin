@@ -51,6 +51,7 @@ class PluginBuilder
             $directories['bootstrap'] . '/Loader.php'                => BootLogicGenerator::generateLoader($pluginPrefix),
             $directories['bootstrap'] . '/Deactivator.php'           => BootLogicGenerator::generateDeactivator($pluginPrefix, $pluginName),
             $directories['bootstrap'] . '/Uninstaller.php'           => BootLogicGenerator::generateUninstaller($pluginPrefix, $pluginName),
+            $directories['bootstrap'] . '/BlockRegistrar.php'        => BootLogicGenerator::generateBlockRegistrar($pluginPrefix, $pluginName),
             $directories['bootstrap'] . '/RoutesRegistrar.php'       => BootLogicGenerator::generateRoutesRegistrar($pluginPrefix, $pluginName),
             $directories['app'] . '/Bootstrap.php'                   => BaseLogicGenerator::generateBootstrapLogic($pluginPrefix, $pluginName),
             $directories['foundation'] . '/ProviderManager.php'      => BaseLogicGenerator::generateProviderManagerLogic($pluginPrefix),
@@ -80,12 +81,7 @@ class PluginBuilder
         ];
 
         if ($starterKit === 'React') {
-            $reactFiles = ReactKitGenerator::generate($pluginDir, $pluginPrefix, $pluginName);
-
-            $srcDir = $this->directoryService->createDir($pluginDir, 'src');
-            $this->directoryService->createDir($srcDir , 'pages');
-            $this->directoryService->createDir($srcDir , 'styles');
-
+            $reactFiles = ReactKitGenerator::generate($pluginDir, $pluginPrefix, $pluginName, $directories);
             $files = array_merge($files, $reactFiles);
         }
 

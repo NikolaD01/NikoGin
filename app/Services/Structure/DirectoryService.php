@@ -91,6 +91,34 @@ class DirectoryService
         mkdir($seederDir, 0755);
         $this->directories['seeders'] = $seederDir;
 
+        $srcDir = $pluginDir . '/src';
+        mkdir($srcDir, 0755);
+        $this->directories['src'] = $srcDir;
+
+        $pagesDir = $srcDir . '/pages';
+        mkdir($pagesDir, 0755);
+        $this->directories['pages'] = $pagesDir;
+
+        $stylesDir = $srcDir . '/styles';
+        mkdir($stylesDir, 0755);
+        $this->directories['styles'] = $stylesDir;
+
+        $servicesDir = $srcDir . '/services';
+        mkdir($servicesDir, 0755);
+        $this->directories['services'] = $servicesDir;
+
+        $blockDir = $srcDir . '/blocks';
+        mkdir($blockDir, 0755);
+        $this->directories['blocks'] = $blockDir;
+
+        $blockExample = $blockDir . '/block-example';
+        mkdir($blockExample, 0755);
+        $this->directories['block-example'] = $blockExample;
+
+        $typesDir = $srcDir . '/types';
+        mkdir($typesDir, 0755);
+        $this->directories['types'] = $typesDir;
+
         return $this->directories;
     }
 

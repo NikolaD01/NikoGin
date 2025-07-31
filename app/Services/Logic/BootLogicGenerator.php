@@ -185,4 +185,36 @@ class RoutesRegistrar implements Bootable
 }
 PHP;
     }
+
+    public static function generateBlockRegistrar(string $pluginPrefix, string $pluginName): string
+    {
+        $dirConstant = strtoupper(
+                str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))
+            ) . '_DIR';
+
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\\Core\\Bootstrap;
+use {$pluginPrefix}\\Core\\Contracts\\Bootable;
+class BlockRegistrar implements Bootable
+{
+    public static function boot(): void
+    {
+       add_action('init', [self::class, 'run']);
+    }
+
+    public static function run(): void
+    {
+        \$blocksDir = {$dirConstant} . '/build/blocks';
+        \$blockFolders = array_filter(glob(\$blocksDir . '/*'), 'is_dir');
+
+        foreach (\$blockFolders as \$blockPath) {
+            register_block_type(\$blockPath);
+        }
+    }
+}
+PHP;
+
+    }
 }
