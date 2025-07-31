@@ -6,14 +6,21 @@ class DirectoryService
 {
     private array $directories = [];
 
+    public function createDir(string $dir, string $dirName): string
+    {
+        $directoryPath =  $dir . '/' . $dirName;
+        if (!is_dir($directoryPath)) {
+            mkdir($directoryPath, 0755, true);
+        }
+        return $directoryPath;
+    }
+
     public function createDirectories(string $pluginDir): array
     {
         // Define the app directory
         $appDir = $pluginDir . '/app';
         mkdir($appDir, 0755);
         $this->directories['app'] = $appDir;
-
-
 
         $routesDir = $appDir . '/routes';
         mkdir($routesDir, 0755);
@@ -84,13 +91,41 @@ class DirectoryService
         mkdir($seederDir, 0755);
         $this->directories['seeders'] = $seederDir;
 
+        $srcDir = $pluginDir . '/src';
+        mkdir($srcDir, 0755);
+        $this->directories['src'] = $srcDir;
+
+        $pagesDir = $srcDir . '/pages';
+        mkdir($pagesDir, 0755);
+        $this->directories['pages'] = $pagesDir;
+
+        $stylesDir = $srcDir . '/styles';
+        mkdir($stylesDir, 0755);
+        $this->directories['styles'] = $stylesDir;
+
+        $servicesDir = $srcDir . '/services';
+        mkdir($servicesDir, 0755);
+        $this->directories['services'] = $servicesDir;
+
+        $blockDir = $srcDir . '/blocks';
+        mkdir($blockDir, 0755);
+        $this->directories['blocks'] = $blockDir;
+
+        $blockExample = $blockDir . '/block-example';
+        mkdir($blockExample, 0755);
+        $this->directories['block-example'] = $blockExample;
+
+        $typesDir = $srcDir . '/types';
+        mkdir($typesDir, 0755);
+        $this->directories['types'] = $typesDir;
+
         return $this->directories;
     }
 
     /*
      * This is universal method for creating single level directors
      */
-    public function createDir(string $httpDir, string $dirName): string
+    public function createHttpDir(string $httpDir, string $dirName): string
     {
         $directoryPath =  $httpDir . '/' . $dirName;
         if (!is_dir($directoryPath)) {

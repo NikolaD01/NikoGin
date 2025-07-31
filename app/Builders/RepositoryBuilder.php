@@ -18,7 +18,7 @@ class RepositoryBuilder
         $httpDir = sprintf('%s/%s/app/Http/', $currentDir, $dir);
         $pluginPrefix = ComposerPrefixExtractor::extractPrefix($dir);
 
-        $dir = $this->directoryService->createDir($httpDir, 'Repositories');
+        $dir = $this->directoryService->createHttpDir($httpDir, 'Repositories');
         RepositoryLogicGenerator::generate($name, $table ,$dir, $pluginPrefix);
 
         return $dir;
