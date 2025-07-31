@@ -81,16 +81,7 @@ class PluginBuilder
         ];
 
         if ($starterKit === 'React') {
-            $reactFiles = ReactKitGenerator::generate($pluginDir, $pluginPrefix, $pluginName);
-
-            $srcDir = $this->directoryService->createDir($pluginDir, 'src');
-            $this->directoryService->createDir($srcDir , 'pages');
-            $this->directoryService->createDir($srcDir , 'styles');
-            $this->directoryService->createDir($srcDir , 'types');
-            $blockDir = $this->directoryService->createDir($srcDir , 'blocks');
-            $this->directoryService->createDir($blockDir , 'block-example');
-
-
+            $reactFiles = ReactKitGenerator::generate($pluginDir, $pluginPrefix, $pluginName, $directories);
             $files = array_merge($files, $reactFiles);
         }
 

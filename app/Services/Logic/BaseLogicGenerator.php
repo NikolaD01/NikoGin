@@ -19,6 +19,7 @@ use {$pluginPrefix}\\Core\\Bootstrap\\Deactivator;
 use {$pluginPrefix}\\Core\\Bootstrap\\Loader;
 use {$pluginPrefix}\\Core\\Bootstrap\\Uninstaller;
 use {$pluginPrefix}\\Core\\Bootstrap\\RoutesRegistrar;
+use {$pluginPrefix}\\Core\\Bootstrap\\BlockRegistrar;
 class Bootstrap
 {
     /** @var class-string[] */
@@ -28,6 +29,7 @@ class Bootstrap
         Loader::class,
         Uninstaller::class,
         RoutesRegistrar::class,
+        BlockRegistrar::class,
     ];
 
     /**
