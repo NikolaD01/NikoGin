@@ -49,11 +49,13 @@ TS;
 {
   "apiVersion": 2,
   "name": "{$pluginPrefix}/block-example",
-  "title": "Example Block",
+    "title": "Example Block",
   "category": "widgets",
   "icon": "smiley",
   "description": "A simple example block.",
-  "editorScript": "file:../../block.js"
+  "editorScript": "file:../../block.js",
+  "style": "{$pluginPrefix}-block-example-style",
+  "editorStyle": "{$pluginPrefix}-block-example-editor-style"
 }
 JSON;
     }
