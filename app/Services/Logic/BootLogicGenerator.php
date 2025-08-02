@@ -196,12 +196,14 @@ PHP;
 <?php
 
 namespace {$pluginPrefix}\\Core\\Bootstrap;
+
 use {$pluginPrefix}\\Core\\Contracts\\Bootable;
+
 class BlockRegistrar implements Bootable
 {
     public static function boot(): void
     {
-       add_action('init', [self::class, 'run']);
+        add_action('init', [self::class, 'run']);
     }
 
     public static function run(): void
@@ -210,11 +212,118 @@ class BlockRegistrar implements Bootable
         \$blockFolders = array_filter(glob(\$blocksDir . '/*'), 'is_dir');
 
         foreach (\$blockFolders as \$blockPath) {
-            register_block_type(\$blockPath);
+            \$blockName = basename(\$blockPath);
+            \$styleHandle = "{$pluginPrefix}-{\$blockName}-style";
+            \$editorStyleHandle = "{$pluginPrefix}-{\$blockName}-editor-style";
+
+            \$stylePath = "\$blockPath/style.css";
+            if (file_exists(\$stylePath)) {
+                wp_register_style(
+                    \$styleHandle,
+                    {$dirConstant} . "/build/blocks/{\$blockName}/style.css",
+                    [],
+                    filemtime(\$stylePath)
+                );
+            }
+
+            \$editorStylePath = "\$blockPath/editor.css";
+            if (file_exists(\$editorStylePath)) {
+                wp_register_style(
+                    \$editorStyleHandle,
+                    {$dirConstant} . "/build/blocks/{\$blockName}/editor.css",
+                    ['wp-edit-blocks'],
+                    filemtime(\$editorStylePath)
+                );
+            }
+
+            \$blockJsonPath = \$blockPath . '/block.json';
+            if (file_exists(\$blockJsonPath)) {
+                register_block_type(\$blockPath, [
+                    'style' => file_exists(\$stylePath) ? \$styleHandle : null,
+                    'editor_style' => file_exists(\$editorStylePath) ? \$editorStyleHandle : null,
+                ]);
+            }
         }
     }
 }
 PHP;
-
     }
+
+
+    public static function generateAssetsRegistrar(string $pluginPrefix, string $pluginName): string
+    {
+        $dirConstant = strtoupper(
+                str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))
+            ) . '_DIR';
+
+        $urlConstant = strtoupper(
+                str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))
+            ) . '_URL';
+
+        $namespaceConstant = strtoupper(
+                str_replace(' ', '_', preg_replace('/[^a-zA-Z0-9 ]/', '', $pluginName))
+            ) . '_NAMESPACE';
+
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\\Core\\Bootstrap;
+
+use {$pluginPrefix}\\Core\\Contracts\\Bootable;
+
+class AssetsRegistrar implements Bootable
+{
+    private static array \$pages = [
+    ];
+
+    public static function boot(): void
+    {
+        add_action('admin_enqueue_scripts', [self::class, 'run']);
+    }
+
+    public static function run(): void
+    {
+        if (!isset(\$_GET['page'])) {
+            return;
+        }
+
+        \$currentPage = sanitize_text_field(\$_GET['page']);
+
+        if (isset(self::\$pages[\$currentPage])) {
+            \$handle = \$currentPage;
+            \$scriptName = self::\$pages[\$currentPage];
+            \$basePath = {$dirConstant} . "build/{\$scriptName}";
+            \$baseUrl  = {$urlConstant} . "build/{\$scriptName}";
+
+            \$scriptSource = \$baseUrl . ".js";
+            wp_enqueue_script(
+                \$handle,
+                \$scriptSource,
+                ['wp-element', 'wp-components', 'wp-api-fetch'],
+                file_exists("\{\$basePath}.js") ? filemtime("\{\$basePath}.js") : '1.0.0',
+                true
+            );
+
+            wp_localize_script(\$handle, '{$pluginName}', [
+                'apiUrl'    => rest_url({$namespaceConstant}),
+                'nonce'     => wp_create_nonce('wp_rest'),
+                'adminUrl'  => admin_url(),
+                'pluginUrl' => {$urlConstant},
+            ]);
+
+            \$stylePath = "\{\$basePath}.css";
+            if (file_exists(\$stylePath)) {
+                wp_enqueue_style(
+                    \$handle,
+                    \$baseUrl . ".css",
+                    [],
+                    filemtime(\$stylePath)
+                );
+            }
+        }
+    }
+}
+PHP;
+    }
+
 }
