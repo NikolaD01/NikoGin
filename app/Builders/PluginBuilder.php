@@ -40,9 +40,10 @@ class PluginBuilder
     private function createStructure(string $pluginDir, string $pluginPrefix, string $pluginName, string $directorySlug, array $options): void
     {
 
-        $directories = $this->directoryService->createDirectories($pluginDir);
+        $starterKit = strtolower($options['kit']) ?? '';
 
-        $starterKit = $options['kit'] ?? '';
+        $directories = $this->directoryService->createDirectories($pluginDir, $starterKit);
+
 
         $files = [
             $pluginDir . "/" . $directorySlug . ".php"               => FileLogicGenerator::generateMainFileLogic($pluginPrefix, $pluginName),
@@ -81,7 +82,7 @@ class PluginBuilder
             $directories['routes'] . '/api.php'                      => FileLogicGenerator::generateApiRouterLogic($pluginPrefix),
         ];
 
-        if ($starterKit === 'React') {
+        if ($starterKit === 'react') {
             $reactFiles = ReactKitGenerator::generate($pluginDir, $pluginPrefix, $pluginName, $directories);
             $files = array_merge($files, $reactFiles);
         }
