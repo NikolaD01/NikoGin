@@ -59,6 +59,12 @@ if ( ! defined( '{$constantSlug}' ) ) {
 // Load the Composer autoloader
 require_once __DIR__ . '/vendor/autoload.php';
 
+
+// We need to manually define package/plugin file to load it inside our plugin
+// this package also exist as separate wp plugin 
+if (class_exists('ActionScheduler') === false) {
+    require_once PWI_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
+}
 // Instantiate the Plugin class
 use {$pluginPrefix}\\Bootstrap;
 Bootstrap::init();";

@@ -53,6 +53,40 @@ class Bootstrap
 ";
     }
 
+    public static function generateJob(string $pluginPrefix): string
+    {
+        $lowerPrefix = strtolower($pluginPrefix);
+
+        return <<<PHP
+<?php
+
+namespace {$pluginPrefix}\\Core\\Foundation;
+
+abstract class Job
+{
+    final public function __construct()
+    {
+        add_action("{$lowerPrefix}_" . \$this->getActionHook() . "_job", [\$this, 'handle'], 10, \$this->getNumOfArgs());
+    }
+
+    /**
+     * Get the action hook name (without prefix/suffix).
+     */
+    abstract protected function getActionHook(): string;
+
+    /**
+     * Number of args passed to the job handler.
+     */
+    abstract protected function getNumOfArgs(): int;
+
+    /**
+     * Handle the job logic.
+     */
+    abstract public function handle(...\$args): void;
+}
+PHP;
+    }
+
     public static function generateProviderManagerLogic(string $pluginPrefix): string
     {
         return "<?php\n\nnamespace {$pluginPrefix}\\Core\\Foundation;\n\nabstract class ProviderManager\n{\n    protected array \$providers = [];\n\n    public function register(): void\n    {\n        foreach (\$this->providers as \$providerClass) {\n            \$provider = new \$providerClass();\n            \$provider->register();\n        }\n    }\n}";
@@ -134,7 +168,8 @@ abstract class Shortcode
             'type' => 'project',
             'license' => 'MIT',
             'require' => [
-                'php' => '>=8.1',
+                'php' => '>=8.2',
+                "woocommerce/action-scheduler" => "^3.9"
             ],
             'autoload' => [
                 'psr-4' => [
@@ -269,8 +304,6 @@ abstract class Repository
 }
 PHP;
     }
-
-
 
 }
 

@@ -17,10 +17,7 @@ use NikoGin\Services\Logic\BootLogicGenerator;
 class PluginBuilder
 {
     public function __construct(
-//        private readonly BaseLogicGenerator $baseLogicGenerator,
         private readonly DirectoryService $directoryService,
-       // private readonly ContractsLogicGenerator $contractsLogicGenerator,
-       // private readonly BootLogicGenerator $bootLogicGenerator,
     )
     {}
 
@@ -65,11 +62,12 @@ class PluginBuilder
             $directories['foundation'] . '/Listener.php'             => BaseLogicGenerator::generateListenerLogic($pluginPrefix),
             $directories['foundation'] . '/Repository.php'           => BaseLogicGenerator::generateRepository($pluginPrefix),
             $directories['foundation'] . '/Shortcode.php'            => BaseLogicGenerator::generateShortcode($pluginPrefix),
+            $directories['foundation'] . '/Job.php'                  => BaseLogicGenerator::generateJob($pluginPrefix),
             $directories['managers'] . '/ServiceProviderManager.php' => ManagerLogicGenerator::generateServiceProviderManagerLogic($pluginPrefix),
             $directories['managers'] . '/ListenerManager.php'        => ManagerLogicGenerator::generateListenerManagerLogic($pluginPrefix),
             $directories['traits'] . '/IsSingleton.php'              => TraitLogicGenerator::generateIsSingletonTraitLogic($pluginPrefix),
             $directories['traits'] . '/DB.php'                       => TraitLogicGenerator::generateDBLogic($pluginPrefix),
-            $directories['traits'] . '/HasPermissions.php'               => TraitLogicGenerator::generateHasPermissionsTrait($pluginPrefix),
+            $directories['traits'] . '/HasPermissions.php'           => TraitLogicGenerator::generateHasPermissionsTrait($pluginPrefix),
             $directories['support'] . '/Container.php'               => SupportLogicGenerator::generateContainerLogic($pluginPrefix),
             $directories['support'] . '/Router.php'                  => SupportLogicGenerator::generateRouterLogic($pluginPrefix, $pluginName),
             $directories['support'] . '/HTTP.php'                    => SupportLogicGenerator::generateHTTPLogic($pluginPrefix),

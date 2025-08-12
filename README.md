@@ -282,7 +282,7 @@ nikogin make:middleware ExampleName example/
 ## Incoming
 This is list of incoming features and commands : \
 **BE** 
-- Jobs (Depending on WooCommerce Action Scheduler (subject to change), WordPress background processes)
+- Jobs - (Add command , logic is already created)
 - WordPress component extension (Ability to easily extend any WordPress component as WpTable ) (Subject to change)
 - Commands (Extend WP CLI, create commands)
 - Seeders
